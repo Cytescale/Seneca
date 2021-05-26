@@ -1,0 +1,6 @@
+{
+	"appId": "io.ionic.starter",
+	"appName": "seneca",
+	"webDir": "build",
+	"bundledWebRuntime": false
+}
