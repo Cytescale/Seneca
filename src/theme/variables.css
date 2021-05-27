@@ -2,6 +2,8 @@
 http://ionicframework.com/docs/theming/ */
 
 /** Ionic CSS Variables **/
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600;700&family=Quicksand:wght@300;400;500;600;700&family=Sen:wght@400;700;800&display=swap');
+
 :root {
   /** primary **/
   --ion-color-primary: #3880ff;
@@ -157,6 +159,7 @@ http://ionicframework.com/docs/theming/ */
     --ion-color-light-contrast-rgb: 255,255,255;
     --ion-color-light-shade: #1e2023;
     --ion-color-light-tint: #383a3e;
+    
   }
 
   /*

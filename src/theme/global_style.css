@@ -1,5 +1,92 @@
-@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600;700&family=Quicksand:wght@300;400;500;600;700&family=Sen:wght@400;700;800&display=swap');
+
 body{
      font-family: sen;
+
+}    
+
+.app-start-spacer{
+     height: 52px;
+     width: 100%;
+}
+
+.app-welcom-head-main-cont{
+     font-size: 32px;
+     padding: 14px;
+     position: relative;
+     font-weight: 700;
+     font-family: sen;
+     color: #fff;
+}
+.app-welcom-head-close-butt{
+     color: #fff;
+     position: absolute;
+     right: 0;
+     top: 0;
+     margin: 18px;
+     margin-top: 32px ; 
      
+}
+
+.app-dhead-main-cont{
+     padding: 14px;
+     color: #fff;
+}
+.app-dhead-pri-str-main-cont{
+     font-size: 18px;
+     font-weight: 700;
+     font-family: sen;
+     color: #fff;
+}
+.app-dhead-sec-str-main-cont{
+     color: var(--text-color-s2);
+     font-size: 12px;
+     font-weight: 400;
+     margin-bottom: 2px;
+     font-family: sen;
+     
+}
+.app-feat-live-indi-main-cont{
+     width: 100%;
+     height: auto;
+     font-size: 13px;
+     padding-top: 4px;
+     padding-bottom: 4px;
+
+     position: absolute;
+     top: 0;
+     left: 0;
+     right: 0;
+     
+}
+.app-feat-live-indi-live-txt-cont{
+     background-color: red;
+     color: #fff;
+     width: fit-content;
+     height: fit-content;
+     padding-left: 6px;
+     padding-top: 3px;
+     padding-bottom: 3px;
+     border-top-right-radius: 6px;
+     border-bottom-right-radius: 6px;
+     padding-right: 6px;
+
+}
+.app-bottombar-main-cont{
+     height: 58px;
+     --background:var(--env-color-s1);
+     --ripple-color:var(--primary-color-light);
+     border-top: 1px solid var(--env-color-s2);
+}
+.app-bottombar-ico{
+     width: 18px;
+     height: 18px;
+}
+.app-bottombar-outer-main-cont{
+     z-index: 99999999;
+}
+.app-render-content{
+
+}
+.app-fab-main-butt{
+     margin: 12px;
 }

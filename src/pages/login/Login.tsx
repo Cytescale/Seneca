@@ -54,6 +54,7 @@ export default class LoginAct<LoginProps> extends React.Component{
                               </div>
 
                               <div className='app-bottom-deco-main-cont'>
+                              <div >Forgot Password</div>
                               <div className='app-bottom-deco-1'/>
                               <div className='app-bottom-deco-2'/>
                               </div>
