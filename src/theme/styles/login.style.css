@@ -1,0 +1,126 @@
+.login-content-main-cont{
+     --background: var(--env-color-s1);
+}
+.app-content-head-main-cont{
+     width: 100%;
+     height: 52px;
+     padding: 22px;
+
+}
+.app-content-head-logo-main-cont{
+     font-weight: 600;
+     font-size: 22px;
+     font-family: open+sans;    
+     float: left;
+
+}
+.app-content-head-right-butt-main-cont{
+     font-weight: 400;
+     font-size:18px;
+     font-family: sen;    
+     float: right;    
+     color: var(--ion-color-success);
+}
+.app-content-login-form-main-cont{
+ position: absolute;
+ bottom: 0;
+ left: 0;
+ right: 0;
+padding-left: 12px;
+padding-right: 12px;
+padding-bottom: 30vh;
+
+}
+.app-content-login-form-fld-cont{
+     --border-style:none;
+     --background: var(--env-color-s1); 
+}
+.app-content-login-form-lab{     
+     --color:var( --text-color-s1);
+     z-index: 999;
+     font-size: 11px;
+}
+.app-content-login-form-fld{
+     font-family: sen;
+     --border-style:none;    
+     border-radius:12px;
+     height: 52px;
+     --background: var(--env-color-s1);
+     --padding-start:22px;
+}
+
+#login-pass-fld{
+     margin-top: 18px;
+     
+}
+.app-content-login-sub-butt{
+     margin-top: 22px;   
+     background-color: #fff;
+     color: #000;
+     border-radius: 32px;
+     width: 100%;
+     height: 52px;
+     font-size: 16px;
+     position: relative;
+}
+
+.app-login-or-main-cont{
+     width: 100%;
+     padding-top: 12px;
+     text-align: center;
+
+}
+.app-content-login-sub-ico-left{
+     position: absolute;
+     left: 0;
+     top: 0;
+     bottom: 0;
+     margin-left: 12px;
+     margin-top: 10px;
+     width: 32px;
+     height: 32px;
+}
+
+.app-bottom-deco-main-cont{
+     position: fixed;
+     bottom: 0;
+     height: auto;
+     width: 100%;
+     z-index: 200;
+}
+.app-bottom-deco-1{
+     width: 100%;
+     height: 52px;
+     position: fixed;
+     bottom: 0;
+     background-color: var(--primary-color-dark);
+}
+.app-bottom-deco-2{
+     width: 100%;
+     height: 42px;
+     box-shadow: 0px -4px 4px rgba(0, 0, 0, 0.06);
+     position: fixed;
+     bottom: 0;
+     background-color: var(--primary-color-light);
+}
+.app-content-login-intro-main-cont{
+     font-family: sen;
+     font-family: 700;
+     font-size: 22px;
+     height: 200px;
+     display: flex;
+     justify-content: center;
+     align-items: center;    
+}
+.app-content-login-intro-ico-cont{
+     position: absolute;
+     left: 0;
+     right: 0;
+     width: 100%;
+     height: 32px;
+     
+}
+.app-content-login-intro-ico{
+     width: 100%;
+     margin-left: 0px;
+}
