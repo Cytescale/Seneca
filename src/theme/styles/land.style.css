@@ -89,10 +89,23 @@
 }
 .app-feat-space-bottom-name-main-cont{
      position: absolute;
+     display: inline-flex;
      bottom: 0;
      left: 0;
-     padding: 18px;
+     padding: 12px;
      text-align: left;
+}
+.app-feat-space-left-pro-ico{
+     width: 32px;
+     height: 32px;
+     object-fit: cover;
+     font-family: sen;
+     font-weight: 700;
+     border-radius: 320px;
+     overflow: hidden;
+}
+.app-feat-space-bottom-name-ava-main-cont{
+     margin-right: 6px;
 }
 .app-feat-space-bottom-name{
      font-family: sen;
@@ -150,7 +163,7 @@
 
 }
 .app-list-space-cont{
-
+     border-radius: 8px;
      overflow: hidden;    
      margin-bottom: 12px;
 }
@@ -166,4 +179,135 @@
      margin-top: 82px;
      border-bottom: 1px solid var(--env-color-s3);
 
+}
+
+.app-fab-main-butt-butt{
+     --background:var(--primary-color-light);
+}
+
+
+.app-toolbar-main-cont{
+     --background:var(--env-color-s1); 
+     --color:#fff;
+     height: 62px;
+     display: flex;
+     justify-content: center;
+     border-bottom: 1px solid var(--env-color-s2);
+}
+.app-toolbar-tit-main-cont{
+     font-family: sen;
+     font-weight: 600;
+     font-size: 14px;
+     position: fixed;
+     left: 0;
+     right: 0;
+     top: 0;
+     bottom: 0;
+     display: flex;
+     justify-content: center;
+     align-items: center;
+     text-align: center;
+
+}
+.app-toolbar-tit-more-ico{
+     width: 26px;
+     height: 26px;
+     color: #fff;
+}
+
+.app-profile-pic-main-cont{
+     width: 100%;
+     height: auto;
+     display: flex;
+     justify-content: center;
+     align-items: center;
+     padding-top: 32px;
+     padding-bottom: 12px;
+}
+.app-profile-pic-cont{
+     color: #fff;
+     position: relative;
+}
+.app-profile-pic-cont-ico{
+     width: 100px;
+     height: 100px;
+     object-fit: cover;
+     overflow: hidden;
+     border-radius: 18px;
+}
+.app-profile-pic-cont-butt-cont{
+     position: absolute;
+     bottom: 0;
+     height: 32px;
+     
+}
+.app-profile-pic-cont-butt{
+     height: 42px;
+     width: 150px;
+     padding-top: 6px;  
+     padding-bottom: 6px;
+     font-size: 12px;
+     text-transform: none;
+     --border-radius:18px;
+     color: #fff;
+}
+.app-profile-pic-inner-cont{
+     position: relative;
+     display: flex;
+     justify-content: center;
+
+}
+
+.app-profile-pic-name{
+     color: #fff;
+     font-family: sen;
+     font-weight: 700;
+     font-size: 17px;
+     margin-top: 22px;
+}
+
+.app-profile-bio-main-cont{
+padding: 12px;
+padding-top: 0px;
+padding-bottom: 0px;
+margin-top: 12px;
+}
+.app-profile-bio-cont{
+     padding: 14px;
+     background-color: var(--env-color-s2);
+     border-radius: 8px;
+     font-size: 12px;    
+     color:var(--text-color-s2);
+}
+
+.app-profile-count-main-cont{
+margin-top: 22px;
+width: 100%;
+padding: 12px;
+padding-top: 4px;
+padding-bottom: 10px;
+display: inline-flex;
+border-bottom: 1px solid var(--env-color-s2);
+}
+.app-profile-tab-main-cont{
+     width: auto;
+     flex: 1;
+     
+     text-align: center
+}
+.app-profile-tab-tit{
+     font-size: 15px;
+     font-weight: 700;
+     font-family: sen;
+     color: var(--text-color-s1);
+}
+.app-profile-tab-count{
+font-size: 15px;
+margin-top:6px;
+color: #fff;
+font-family: sen;
+}
+
+.app-profile-main-cont{
+     
 }

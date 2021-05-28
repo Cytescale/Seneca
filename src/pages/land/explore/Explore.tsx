@@ -1,4 +1,4 @@
-import {IonTabs,IonIcon,IonFab,IonTabBar,IonFabButton, IonRouterOutlet,IonTabButton, IonContent,IonButton, IonHeader, IonSlides, IonSlide,IonRefresher, IonRefresherContent,IonPage, IonItem,IonLabel,IonImg,IonInput,IonTitle, IonToolbar } from '@ionic/react';
+import {IonTabs,IonAvatar,IonIcon,IonFab,IonTabBar,IonFabButton, IonRouterOutlet,IonTabButton, IonContent,IonButton, IonHeader, IonSlides, IonSlide,IonRefresher, IonRefresherContent,IonPage, IonItem,IonLabel,IonImg,IonInput,IonTitle, IonToolbar } from '@ionic/react';
 import { add,mic } from 'ionicons/icons';
 
 import { RefresherEventDetail } from '@ionic/core';
@@ -15,12 +15,9 @@ import pep2 from '../../../assets/placeholders/pep2.jpg'
 import pep3 from '../../../assets/placeholders/pep3.jpg'
 import pep4 from '../../../assets/placeholders/pep4.jpg'
 
-import { Home_UnSelec,
-     Search_UnSelec,
-     Expl_UnSelec,
-     Profile_UnSelec} from '../../../assets';
+import { Mic_UnSelec} from '../../../assets';
 
-import {ExportProps} from '../../../types/land/land.type';
+import {ExploreProps} from '../../../types/land/land.type';
 
 interface spaceInter{
      name:string
@@ -48,11 +45,16 @@ let  FeaturedSpace:React.FC<{data:spaceInter}> =(props)=>{
                <IonImg src={props.data.banner_art_src} className='app-feat-space-ban-art'/>
                <div className='app-feat-space-bottom-main-cont'>
                     <div className='app-feat-space-bottom-name-main-cont'>
-                         <div className='app-feat-space-bottom-name'>
-                         {props.data.name}     
+                         <div className='app-feat-space-bottom-name-ava-main-cont'>
+                              <IonImg src={pep3} className='app-feat-space-left-pro-ico'></IonImg>
                          </div>
-                         <div className='app-feat-space-bottom-crea-name'>
-                         {props.data.creator_name}     
+                         <div>
+                              <div className='app-feat-space-bottom-name'>
+                              {props.data.name}     
+                              </div>
+                              <div className='app-feat-space-bottom-crea-name'>
+                              {props.data.creator_name}     
+                              </div>
                          </div>
                     </div>
                     <div className='app-feat-space-bottom-pro-main-cont'>
@@ -183,8 +185,8 @@ let SpaceFeed:React.FC<{}>=(props)=>{
           </div>
      )
 }
-export default class Explore<ExportProps> extends React.Component{
-     constructor(props:ExportProps){
+export default class Explore<ExploreProps> extends React.Component{
+     constructor(props:ExploreProps){
           super(props);
      }
      doRefresh(event: CustomEvent<RefresherEventDetail>) {
@@ -217,8 +219,8 @@ export default class Explore<ExportProps> extends React.Component{
                               </div>
                               </IonContent>        
                               <IonFab vertical="bottom" horizontal="end" slot="fixed" className='app-fab-main-butt'>
-                                   <IonFabButton>
-                                   <IonIcon icon={mic} />
+                                   <IonFabButton className='app-fab-main-butt-butt'>
+                                        <IonImg src={Mic_UnSelec}></IonImg>
                                    </IonFabButton>
                               </IonFab>
                     </IonPage>

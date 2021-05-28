@@ -7,7 +7,8 @@ import Home_Selec from './svg/home-selec.svg';
 import Search_Selec from './svg/search-selec.svg';
 import Expl_Selec from './svg/expl-selec.svg';
 import Profile_Selec from './svg/profile-selec.svg';
-
+import Mic_UnSelec from './svg/mic-unselec.svg';
+import More_verti from './svg/more-verti.svg';
 
 export {CancelIco,
      Home_UnSelec,
@@ -17,4 +18,7 @@ export {CancelIco,
      Home_Selec,
      Search_Selec,
      Expl_Selec,
-     Profile_Selec}; 
+     Profile_Selec,
+     Mic_UnSelec,
+     More_verti
+}; 

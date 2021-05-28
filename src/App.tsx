@@ -37,6 +37,12 @@ const App: React.FC = () => (
         <Route exact path="/land/explore">
         <Land/>
         </Route>
+        <Route exact path="/land/search">
+        <Land/>
+        </Route>
+        <Route exact path="/land/profile">
+        <Land/>
+        </Route>
         <Route exact path="/land">
         <Land/>
         </Route>
