@@ -1,13 +1,16 @@
-import {IonTabs,IonAvatar,IonIcon,IonFab,IonTabBar,IonFabButton, IonRouterOutlet,IonTabButton, IonContent,IonButton, IonHeader, IonSlides, IonSlide,IonRefresher, IonRefresherContent,IonPage, IonItem,IonLabel,IonImg,IonInput,IonTitle, IonToolbar } from '@ionic/react';
+import {IonTabs,IonAvatar,IonIcon,IonFab,IonTabBar,IonRippleEffect,IonFabButton, IonRouterOutlet,IonTabButton, IonContent,IonButton, IonHeader, IonSlides, IonSlide,IonRefresher, IonRefresherContent,IonPage, IonItem,IonLabel,IonImg,IonInput,IonTitle, IonToolbar } from '@ionic/react';
 import { add,mic } from 'ionicons/icons';
-
 import { RefresherEventDetail } from '@ionic/core';
 import { chevronDownCircleOutline } from 'ionicons/icons';
-import { Redirect, Route } from 'react-router-dom';
+import { Link, Redirect, Route } from 'react-router-dom';
 import { StatusBar } from '@ionic-native/status-bar/ngx';
 
 import '../../../theme/styles/land.style.css';
 import React,{CSSProperties, useState} from 'react';
+
+import { useHistory } from "react-router-dom";
+
+
 import {CancelIco} from '../../../assets';
 import ban1 from '../../../assets/placeholders/ban1.jpg'
 import pep1 from '../../../assets/placeholders/pep1.jpg'
@@ -39,10 +42,18 @@ class space implements spaceInter{
      }
 }
 
-let  FeaturedSpace:React.FC<{data:spaceInter}> =(props)=>{
+let FeaturedSpace:React.FC<{data:spaceInter}> =(props)=>{
+     let history = useHistory();
      return(
-          <div className='app-feat-space-main-cont'>
+
+          <div className='ion-activatable ripple-parent app-feat-space-main-cont' 
+                    onClick={()=>{
+                         history.push('/land/space');
+                    }}
+               >
+                
                <IonImg src={props.data.banner_art_src} className='app-feat-space-ban-art'/>
+               
                <div className='app-feat-space-bottom-main-cont'>
                     <div className='app-feat-space-bottom-name-main-cont'>
                          <div className='app-feat-space-bottom-name-ava-main-cont'>
@@ -69,7 +80,7 @@ let  FeaturedSpace:React.FC<{data:spaceInter}> =(props)=>{
                               Live
                          </div>
                     </div>:null}
-               
+                    <IonRippleEffect className='app-feat-space-main-cont-ripp'> </IonRippleEffect>
           </div>
      )
 }
@@ -102,6 +113,7 @@ let WecomeHead:React.FC<{shown?:Boolean}> = (props)=>{
      <div className='app-welcom-head-main-cont'  style={{
                display:visi==true?'block':'none',
           }}>
+               {/* <Link to="/land/space" replace >User 1</Link> */}
           Welcome to <br/> Seneca
           
           <IonImg className='app-welcom-head-close-butt' onClick={()=>{

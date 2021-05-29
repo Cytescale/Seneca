@@ -12,6 +12,7 @@
 /build
 /android
 # misc
+/src/certs
 .DS_Store
 .env.local
 .env.development.local

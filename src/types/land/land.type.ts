@@ -11,3 +11,11 @@ export interface ProfileProps{
 
 }
      
+export interface SpaceProps{
+
+}
+     
+export interface RoutesProps{
+
+}
+     
