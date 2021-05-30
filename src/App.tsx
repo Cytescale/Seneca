@@ -1,6 +1,9 @@
 import { BrowserRouter,Redirect, Route } from 'react-router-dom';
-import { IonApp, IonRouterOutlet } from '@ionic/react';
+import { IonApp, IonRouterOutlet, IonSpinner, useIonRouter } from '@ionic/react';
 import { IonReactRouter } from '@ionic/react-router';
+
+
+
 import Home from './pages/Home';
 import Login from './pages/login/Login';
 import Explore from './pages/land/explore/Explore';
@@ -26,23 +29,70 @@ import '@ionic/react/css/display.css';
 /* Theme variables */
 import './theme/variables.css';
 import './theme/global_style.css';
+import firebaseHelper, {firebaseHelperInter} from './api/firebaseHelper';
+import React, { useState } from 'react';
+import history from './pages/history';
 
 
-const App: React.FC = () => (
-  <IonApp>
-    <IonReactRouter>
-      <IonRouterOutlet>
-        <Route exact path="/home" ><Home /></Route>
-        <Route exact path="/land/explore"><Land/></Route>
-        <Route exact path="/land/search"><Land/></Route>
-        <Route exact path="/land/profile"><Land/></Route>
-        <Route path="/space"><Space/></Route>
-        <Route exact path="/land"><Land/></Route>
-        <Route exact path="/login"><Login /></Route>
-        <Route exact path="/"><Redirect to="/login" /></Route>
-      </IonRouterOutlet>
-    </IonReactRouter>
-  </IonApp>
-);
 
-export default App;
+console.log("🚀 appEntry | init");
+const FirebaseHelper:firebaseHelperInter  = new firebaseHelper();
+FirebaseHelper.initFirebaseApp();
+
+
+
+interface appInter {
+    setConnection(val:boolean):void
+}
+
+interface appProps  {
+ 
+};
+interface appstate {
+  isConnected:boolean
+  isAuth:boolean|null
+};
+
+
+export default class App extends React.Component<appProps,appstate> implements appInter{
+  constructor(props:appProps){
+      super(props);
+      this.state = {
+        isConnected:false,
+        isAuth:null
+      }
+      this.setConnection = this.setConnection.bind(this);
+      this.setAuth = this.setAuth.bind(this);
+    }
+
+  setConnection(val: boolean): void {
+    this.setState({isConnected:val});
+  }
+  setAuth(val:boolean):void{
+    this.setState({isAuth:val});
+  }
+
+  componentDidMount(){
+    this.setConnection(true); 
+    FirebaseHelper.checkInitUser().then((res:any)=>{
+      console.log("PRE AUTHs CHECK"+res!);
+      if(!res){this.setAuth(false);  return;}
+      this.setAuth(res!)
+    });
+    // FirebaseHelper.initFirebaseBackend().then((res:any)=>{
+    //   this.setConnection(res); 
+    // });
+  }
+
+  render(){
+    return(
+      <IonApp>
+        {this.state.isConnected===false?<div className='app-disco-main-cont'>Server not connected</div>:null}
+        {
+          this.state.isAuth!==null?<Land isAuth={this.state.isAuth} />:<div className='app-content-loading-main-cont'><div className='app-content-loading-main-cont-tit'>Loading</div><IonSpinner name="dots" /></div>
+        }
+        
+      </IonApp>
+    )
+  }
+}

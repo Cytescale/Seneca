@@ -17,11 +17,11 @@
 
 }
 .app-content-head-right-butt-main-cont{
-     font-weight: 400;
+     font-weight: 700;
      font-size:18px;
      font-family: sen;    
      float: right;    
-     color: var(--ion-color-success);
+     color: #82FF70;
 }
 .app-content-login-form-main-cont{
  position: absolute;
@@ -40,7 +40,7 @@ align-items: center;
           font-size:36px;
      font-weight: 700;
      color: #e0e0e0;
-     margin-bottom: 12px; 
+     margin-bottom: 22px; 
      padding-left: 7px;
 }
 
@@ -85,7 +85,7 @@ align-items: center;
      font-size: 14px;
      font-weight: 700;
      position: relative;
-
+     --background-activated:#e0e0e0;
 }
 
 .app-login-or-main-cont{

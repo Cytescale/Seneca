@@ -1,13 +1,62 @@
-import React from 'react';
-import {IonSearchbar,IonContent, IonHeader,IonPage,IonToolbar,IonTitle,IonButtons,IonIcon,IonButton,IonBackButton,IonRouterOutlet,IonTabBar,IonTabButton,IonImg,IonTabs } from '@ionic/react';
+import React,{useState} from 'react';
+import {IonContent,
+       useIonActionSheet,
+       IonActionSheet,
+      IonHeader,
+      IonPage,
+      IonToolbar,
+      IonTitle,
+      IonButtons,
+      IonButton,
+      IonBackButton,
+      IonImg, 
+      useIonRouter} from '@ionic/react';
 import { Redirect, Route } from 'react-router-dom';
 import '../../../theme/styles/land.style.css';
 import { ProfileProps } from '../../../types/land/land.type';
 import {More_verti} from '../../../assets/';
 import pep2 from '../../../assets/placeholders/pep2.jpg'
+import { setToken } from '../../../api/firebaseHelper';
+import history from '../../history';
 
 
-export default class Profile<ProfileProps> extends React.Component{
+
+
+const Bottomsheet:React.FC<{}> = (props)=>{
+     const [showActionSheet, setShowActionSheet] = useState(false);
+     const router = useIonRouter();
+     return(
+          <div slot="end">
+               <IonButtons onClick={() => setShowActionSheet(true)}>
+                    <IonImg src={More_verti} className='app-toolbar-tit-more-ico' />
+               </IonButtons>
+      <IonActionSheet
+        isOpen={showActionSheet}
+        onDidDismiss={() => setShowActionSheet(false)}
+        cssClass='my-custom-class'
+        buttons={[{
+               text: 'Logout',
+               role: 'destructive',
+               handler: () => {
+                    setToken('null');
+                    
+                    router.push('/login','none','replace');    
+               }
+          }, 
+          {
+               text: 'Cancel',
+               role: 'cancel',
+               handler: () => {
+               
+               }
+          }]}
+          >
+          </IonActionSheet>
+          </div>
+     )
+}
+
+export default class Profile<ProfileProps> extends React.Component<{},{}>{
      constructor(props:ProfileProps){
           super(props);
      }
@@ -22,9 +71,8 @@ export default class Profile<ProfileProps> extends React.Component{
                <div className='app-toolbar-tit-main-cont'>
                <IonTitle>@username</IonTitle>
                </div>
-               <IonButtons slot="end">
-                    <IonImg src={More_verti} className='app-toolbar-tit-more-ico' />
-               </IonButtons>
+               
+               <Bottomsheet />
                </IonToolbar>
                     <div className='app-profile-main-cont'>
                          <div className='app-profile-pic-main-cont'>

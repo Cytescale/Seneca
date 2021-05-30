@@ -3,7 +3,7 @@ const Home: React.FC = () => {
   return (
     <IonPage>
       <IonContent fullscreen>
-     
+        Exmpty Ionic page
       </IonContent>
     </IonPage>
   );

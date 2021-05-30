@@ -1,16 +1,11 @@
-import {IonTabs,IonAvatar,IonIcon,IonFab,IonTabBar,IonRippleEffect,IonFabButton, IonRouterOutlet,IonTabButton, IonContent,IonButton, IonHeader, IonSlides, IonSlide,IonRefresher, IonRefresherContent,IonPage, IonItem,IonLabel,IonImg,IonInput,IonTitle, IonToolbar } from '@ionic/react';
+import {IonTabs,IonAvatar,IonIcon,IonFab,IonTabBar,IonRippleEffect,IonFabButton, IonRouterOutlet,IonTabButton, IonContent,IonButton, IonHeader, IonSlides, IonSlide,IonRefresher, IonRefresherContent,IonPage, IonItem,IonLabel,IonImg,IonInput,IonTitle, IonToolbar, useIonRouter } from '@ionic/react';
 import { add,mic } from 'ionicons/icons';
 import { RefresherEventDetail } from '@ionic/core';
 import { chevronDownCircleOutline } from 'ionicons/icons';
 import { Link, Redirect, Route } from 'react-router-dom';
 import { StatusBar } from '@ionic-native/status-bar/ngx';
-
 import '../../../theme/styles/land.style.css';
 import React,{CSSProperties, useState} from 'react';
-
-import { useHistory } from "react-router-dom";
-
-
 import {CancelIco} from '../../../assets';
 import ban1 from '../../../assets/placeholders/ban1.jpg'
 import pep1 from '../../../assets/placeholders/pep1.jpg'
@@ -43,12 +38,13 @@ class space implements spaceInter{
 }
 
 let FeaturedSpace:React.FC<{data:spaceInter}> =(props)=>{
-     let history = useHistory();
+
+     let router = useIonRouter();
      return(
 
           <div className='ion-activatable ripple-parent app-feat-space-main-cont' 
                     onClick={()=>{
-                         history.push('/land/space');
+                         router.push('/space','root','push');
                     }}
                >
                 

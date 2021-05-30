@@ -9,6 +9,23 @@ body{
      width: 100%;
 }
 
+.app-content-loading-main-cont{
+     display: flex;
+     width: 100%;
+     height: 100%;
+     justify-content: center;
+     align-items: center;
+     background: var(--env-color-s1);
+     color: #fff
+}
+.app-content-loading-main-cont-tit{
+     margin-right: 9px;
+     font-family: sen;
+     font-size: 17px;
+     font-weight: 700;
+     ;
+}
+
 .app-welcom-head-main-cont{
      font-size: 32px;
      padding: 14px;
@@ -89,4 +106,38 @@ body{
 }
 .app-fab-main-butt{
      margin: 12px;
+}
+.app-disco-main-cont{
+     background: var(--ion-color-danger);
+     position: fixed;
+     top: 0;
+     left: 0;
+     right: 0;
+     height: 42px;
+     display: flex;
+     justify-content: center;
+     align-items: center;
+     font-family: sen;
+     font-size: 16px;
+     font-weight: 600;
+     z-index: 9999999;
+}
+.app-err-noti-main-cont{
+     background: var(--ion-color-danger);
+     height: 42px;
+     border-radius: 8px;
+     display: flex;
+     justify-content: center;
+     align-items: center;
+     font-family: sen;
+     font-size: 14px;
+     font-weight: 600;
+     z-index: 9999999;
+     position: relative;
+}
+
+.app-err-noti-main-cont-ico{
+     position: absolute;
+     right: 0;
+     margin-right: 7px;    
 }

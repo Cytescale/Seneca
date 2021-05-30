@@ -80,9 +80,9 @@ http://ionicframework.com/docs/theming/ */
   --primary-color-dark: #605FD3;
   --primary-color-light: #7978FF;
 
-  --env-color-s1:#000;
-  --env-color-s2:#141414;
-  --env-color-s3:#343434;
+  --env-color-s1:#0F0F0F;
+  --env-color-s2:#242424;
+  --env-color-s3:#454545;
 
   --text-color-s1:#525252;
   --text-color-s2:#6D6D6D;
