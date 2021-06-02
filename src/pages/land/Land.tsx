@@ -8,6 +8,7 @@ import Explore from './explore/Explore';
 import LoginAct from '../login/Login';
 import Search from './search/index';
 import Profile from './profile';
+import EditProfile from '../editProfile';
 import Space from './space';
 
 import React from 'react';
@@ -27,20 +28,24 @@ import { Home_UnSelec,
 import history from '../history';
 import Home from '../Home';
 
-const TabCont:React.FC<{isAuth:boolean}>=(props:{isAuth:boolean})=>{
+
+const TabCont:React.FC<{isAuth:boolean,setAuth:any}>=(props:{isAuth:boolean,setAuth:any})=>{
+     
+
      return(
           <IonReactRouter history={history} >
             <IonRouterOutlet>
           <Route exact path="/home" component={Home}/>
           <Route exact path="/space" component={Space}/>
-          <Route exact path="/login" component={Login}/>
+          <Route exact path="/editprofile" component={EditProfile}/>
+          <Route exact path="/login" render={()=><Login setAuth={props.setAuth} /> }/>
           <Route path="/land/" render={()=>{
                     return(
                          <IonTabs >               
                          <IonRouterOutlet >
-                              <Route  path='/land/:tab(home)'component={LoginAct} exact/>
+                              <Route  path='/land/:tab(home)'component={Home} exact/>
                               <Route  path='/land/:tab(search)'component={Search} exact/>
-                              <Route  path='/land/explore' component={Explore} exact/>
+                              <Route  path='/land/explore' render={()=><Explore />} exact/>
                               <Route  path='/land/:tab(profile)' component={Profile} exact/>
                               <Route  path="/land/" render={() => <Redirect to="/land/explore" />} exact/>
                          </IonRouterOutlet>
@@ -67,13 +72,13 @@ const TabCont:React.FC<{isAuth:boolean}>=(props:{isAuth:boolean})=>{
      )
 }
 
-const LandBase:React.FC<{isAuth:boolean}> = (props)=>{
+const LandBase:React.FC<{isAuth:boolean,setAuth:any}> = (props)=>{
      return(
           <IonApp>
           <IonReactRouter>
          <IonPage id="main">
          <IonContent fullscreen className='app-content-main-cont'>
-                     <TabCont isAuth={props.isAuth}/>
+                     <TabCont isAuth={props.isAuth} setAuth={props.setAuth} />
           </IonContent>
           </IonPage>
           </IonReactRouter>

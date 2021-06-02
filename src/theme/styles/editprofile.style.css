@@ -1,0 +1,60 @@
+
+.app-toolbar-tit{
+     font-size: 16px;
+     font-family: sen;
+     font-weight: 400;
+}
+
+.app-edit-prof-save-butt{
+     color: #8FDE82;
+     text-transform: none;
+}
+
+.app-edit-profile-pro-chnge-butt{
+
+}
+
+.app-edit-profile-pic-inner-cont{
+     position: relative;
+     text-align: center;
+
+}
+
+.app-edit-profile-pro-chnge-butt-cont{
+     position: absolute;
+     bottom: 0;
+     left: 0;
+     bottom:  32px;     
+}
+
+.app-edit-profile-data-main-cont{
+     margin-top: 12px;
+     border-top: 1px solid var(--env-color-s2);
+     border-bottom: 1px solid var(--env-color-s2);
+     padding-bottom: 22px;
+ 
+}
+
+.app-edit-profile-data-item-cont{
+     --background:var(--env-color-s1);
+     --border-color:var(--env-color-s3);
+     
+}
+
+.app-edit-profile-data-lab{
+     font-family: sen;
+     width: 100px;
+     
+     font-size: 14px;
+     font-weight: 400;
+     color: var(--text-color-s2);
+}
+
+.app-edit-profile-data-inp{
+     --padding:0px;
+     --color:#fff;
+}
+.edit-txt-ara{
+     height: 100px;
+
+}

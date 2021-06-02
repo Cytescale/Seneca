@@ -9,13 +9,15 @@ import '../../theme/styles/login.style.css';
 
 
 import React,{useState} from 'react';
-import firebaseHelper,{serverReponse} from '../../api/firebaseHelper';
+import firebaseHelper,{serverReponse, setUid} from '../../api/firebaseHelper';
 import { CancelIco } from '../../assets';
 import history from '../history';
 import { withRouter } from 'react-router';
+import User from '../../components/user';
 
 
 
+const user = new User();
 
 const FirebaseHelper = new firebaseHelper();
 
@@ -47,40 +49,44 @@ function validateEmail(email:string):boolean{
      const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
      return re.test(String(email).toLowerCase());
  }
+
+const  loginCallback = (res:serverReponse,callback:any)=>{
+     if(res.error){
+          switch(res.error.errMess){
+               case 'auth/user-not-found':{
+                    callback(true,"User not found");  
+                    break;
+               }
+               case 'auth/too-many-requests':{
+                    callback(true,"Too many requests , please wait");  
+                    break;
+               }
+               case 'auth/wrong-password':{
+                    callback(true,"Wrong password");  
+                    break;
+               }
+               default:{
+                    callback(true,"Error Occured");
+                    break;
+               }             
+          }
+     }
+     else{
+          user.setUserUid(res.resMess.uid);
+          setUid(res.resMess.uid);
+         history.replace('/land/explore');
+         console.log("login | "+res.resMess);
+     }
+
+}
+
 async function formsubmit(unm:string,pass:string,callback:any,setload:any,setdisab:any,router:any){
 
      setload(true);
      setdisab(true);
      if(unm&&pass){
           if(validateEmail(unm)===true){
-          await FirebaseHelper.initEmailAuth(unm,pass,(res:serverReponse)=>{
-                         if(res.error){
-                              switch(res.error.errMess){
-                                   case 'auth/user-not-found':{
-                                        callback(true,"User not found");  
-                                        break;
-                                   }
-                                   case 'auth/too-many-requests':{
-                                        callback(true,"Too many requests , please wait");  
-                                        break;
-                                   }
-                                   case 'auth/wrong-password':{
-                                        callback(true,"Wrong password");  
-                                        break;
-                                   }
-                                   default:{
-                                        callback(true,"Error Occured");
-                                        break;
-                                   }             
-                              }
-                         }
-                         else{
-                              //router.push('/land/explore/', 'none', "replace");
-                              history.replace('/land/explore');
-                              console.log("login | "+res.resMess);
-                         }
-                    
-               });
+          FirebaseHelper.initEmailAuth(unm,pass,loginCallback).then(res=>loginCallback(res!,callback));
           }else{
                callback(true,"Invalid email");
           }    
@@ -137,7 +143,7 @@ const LoginFormCont:React.FC<LoginFormProps> = (props:LoginFormProps)=>{
 }
 
 
-const LoginAct:React.FC<LoginProps> = (props:LoginProps)=>{
+const LoginAct:React.FC<{ setAuth:any}> = (props)=>{
      return(
           <IonPage >
           <IonContent fullscreen className='app-content-main-cont'>
@@ -172,15 +178,4 @@ const LoginAct:React.FC<LoginProps> = (props:LoginProps)=>{
      )
 }
 
-export default withRouter(LoginAct);
-// export default class LoginAct<LoginProps> extends React.Component{
-//      constructor(props:LoginProps){
-//           super(props);
-          
-//      }
-//      render(){
-//           return(
-               
-//           )
-//      }
-// }
+export default LoginAct;

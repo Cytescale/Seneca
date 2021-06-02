@@ -73,15 +73,14 @@ export default class App extends React.Component<appProps,appstate> implements a
   }
 
   componentDidMount(){
-    this.setConnection(true); 
     FirebaseHelper.checkInitUser().then((res:any)=>{
       console.log("PRE AUTHs CHECK"+res!);
       if(!res){this.setAuth(false);  return;}
       this.setAuth(res!)
     });
-    // FirebaseHelper.initFirebaseBackend().then((res:any)=>{
-    //   this.setConnection(res); 
-    // });
+    FirebaseHelper.initFirebaseBackend().then((res:any)=>{
+      this.setConnection(res); 
+    });
   }
 
   render(){
@@ -89,7 +88,7 @@ export default class App extends React.Component<appProps,appstate> implements a
       <IonApp>
         {this.state.isConnected===false?<div className='app-disco-main-cont'>Server not connected</div>:null}
         {
-          this.state.isAuth!==null?<Land isAuth={this.state.isAuth} />:<div className='app-content-loading-main-cont'><div className='app-content-loading-main-cont-tit'>Loading</div><IonSpinner name="dots" /></div>
+          this.state.isAuth!==null?<Land isAuth={this.state.isAuth} setAuth={this.setAuth} />:<div className='app-content-loading-main-cont'><div className='app-content-loading-main-cont-tit'>Loading</div><IonSpinner name="dots" /></div>
         }
         
       </IonApp>

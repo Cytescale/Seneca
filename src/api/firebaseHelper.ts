@@ -4,6 +4,8 @@ import axios from 'axios';
 import FIREBASE_CONFIG_VAR from "../certs/firebase.config";
 import URLS from './api.routes'; 
      import { Storage } from '@capacitor/storage';
+import User from "../components/user";
+
 
 declare type errResponse = {
      errCode:number
@@ -15,7 +17,7 @@ declare type errResponse = {
 declare type serverReponse ={
      error?:errResponse|null
      resCode?:number
-     resMess?:string
+     resMess?:any
 }
 
 
@@ -40,11 +42,22 @@ const checkToken = async () => {
      const { value } = await Storage.get({ key: 'token' });
      return value;
 }
+
 const setToken = async (token:string) => {
      await Storage.set({key: 'token',value:token});
 };
+const getUid = async () => {
+     const { value } = await Storage.get({ key: 'uid' });
+     return value;
+};
+const setUid = async (uid:string) => {
+     await Storage.set({key: 'uid',value:uid});
+};
 
-export {checkToken,setToken}
+
+export {checkToken,setToken,getUid,setUid}
+
+const  user = new User();
 
 export default class firebaseHelper implements firebaseHelperInter{
      static _FIREBASE_APP:firebase.app.App|null = null;
@@ -76,9 +89,11 @@ export default class firebaseHelper implements firebaseHelperInter{
           }
      }
      async checkInitUser(){
-          let res = await checkToken()
+          let res = await checkToken();
           if( res &&  res!=='null'){
-               console.log("USER SET");  
+               let uid  = await getUid();
+               user.setUserUid(uid);
+               user.setUserToken(res);
                return true;
           }
           else{
@@ -126,22 +141,22 @@ export default class firebaseHelper implements firebaseHelperInter{
 
 
      async initEmailAuth(eml: string, pass: string,callback:any):Promise<serverReponse|null>{
-          let res:serverReponse = {}
+          let ress:serverReponse = {}
           await this.getFirebase()!.auth().signInWithEmailAndPassword(eml,pass).then((result)=>{
-                    res = {
+                    
+                    result.user?.getIdToken(true).then(res=>{
+                         user.setUserToken(res);
+                         setToken(res);
+                    })
+                    ress = {
                          error:null,
                          resCode:200,
-                         resMess:'User authenicated',
+                         resMess:{uid:result.user?.uid}
                     }
-                    result.user?.getIdToken(true).then(res=>{
-                         setToken(res);
-                         console.log();
-                    })
-                    
                })
                .catch((error) => {
                     console.log(error.code); 
-                    res= {
+                    ress= {
                          error:{
                               errCode :1,
                               errMess:error.code,
@@ -151,8 +166,8 @@ export default class firebaseHelper implements firebaseHelperInter{
                     }
                
           });
-          callback(res);
-          return res;
+          //callback(res);
+          return ress;
         
      }
      intiGoogleAuth(): serverReponse | null {

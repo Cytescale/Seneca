@@ -10,7 +10,11 @@ export interface SearchProps{
 export interface ProfileProps{
 
 }
-     
+ 
+export interface editProfileProps{
+
+}
+
 export interface SpaceProps{
 
 }

@@ -14,8 +14,8 @@ import Person_add from './svg/person-add.svg';
 import Share from './svg/share.svg';
 import Fronthand from './svg/front_hand.svg';
 import Send from './svg/send.svg';
-
-
+import Profile_placeholder from './png/profile_placeholder.png';
+const  profPlaceholder = "https://gravatar.com/avatar/dba6bae8c566f9d4041fb9cd9ada7741?d=identicon&f=y";
 export {CancelIco,
      Home_UnSelec,
      Search_UnSelec,
@@ -31,5 +31,7 @@ export {CancelIco,
      Person_add,
      Share,
      Fronthand,
-     Send
+     Send,
+     Profile_placeholder,
+     profPlaceholder
 }; 

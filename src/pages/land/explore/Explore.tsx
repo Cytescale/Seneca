@@ -6,16 +6,28 @@ import { Link, Redirect, Route } from 'react-router-dom';
 import { StatusBar } from '@ionic-native/status-bar/ngx';
 import '../../../theme/styles/land.style.css';
 import React,{CSSProperties, useState} from 'react';
-import {CancelIco} from '../../../assets';
+import {CancelIco,profPlaceholder} from '../../../assets';
 import ban1 from '../../../assets/placeholders/ban1.jpg'
 import pep1 from '../../../assets/placeholders/pep1.jpg'
 import pep2 from '../../../assets/placeholders/pep2.jpg'
 import pep3 from '../../../assets/placeholders/pep3.jpg'
 import pep4 from '../../../assets/placeholders/pep4.jpg'
 
+
+
+
 import { Mic_UnSelec} from '../../../assets';
 
 import {ExploreProps} from '../../../types/land/land.type';
+
+
+import BackendHelper from '../../../api/backendHelper';
+import { getUid } from '../../../api/firebaseHelper';
+import User from '../../../components/user';
+import history from '../../history';
+
+let backendHelper:BackendHelper|null = null;
+const user = new User();
 
 interface spaceInter{
      name:string
@@ -53,7 +65,7 @@ let FeaturedSpace:React.FC<{data:spaceInter}> =(props)=>{
                <div className='app-feat-space-bottom-main-cont'>
                     <div className='app-feat-space-bottom-name-main-cont'>
                          <div className='app-feat-space-bottom-name-ava-main-cont'>
-                              <IonImg src={pep3} className='app-feat-space-left-pro-ico'></IonImg>
+                              <IonImg src={profPlaceholder} className='app-feat-space-left-pro-ico'></IonImg>
                          </div>
                          <div>
                               <div className='app-feat-space-bottom-name'>
@@ -66,9 +78,9 @@ let FeaturedSpace:React.FC<{data:spaceInter}> =(props)=>{
                     </div>
                     <div className='app-feat-space-bottom-pro-main-cont'>
                          <div  className='app-feat-space-bottom-pro-cont'>
-                         <IonImg src={pep1} className='app-feat-space-bottom-pro-ico'></IonImg>
+                         <IonImg src={profPlaceholder} className='app-feat-space-bottom-pro-ico'></IonImg>
                          </div>
-                         <div className='app-feat-space-bottom-pro-count-cont'>+10</div>
+                         <div className='app-feat-space-bottom-pro-count-cont'>+0</div>
                     </div>
                </div>
                {props.data.isLive===true?<div className='app-feat-live-indi-main-cont'>
@@ -82,20 +94,12 @@ let FeaturedSpace:React.FC<{data:spaceInter}> =(props)=>{
 }
 
 let  FeaturedSpaceSlider:React.FC<{}>=(props)=>{
-     let data1 = new space("Sample Space","Musk Elon",true,ban1)
-     let data2 = new space("Best Space","Mark",false,ban1)
-     let data3 = new space("Is it Space","Bane",false,ban1)
+     let data1 = new space("Placeholder Name","name",true,ban1)
      return(
           <div>
                  <IonSlides pager={false} options={{initialSlide: 0,speed: 400}}>
                     <IonSlide>
                     <FeaturedSpace data={data1} />
-                    </IonSlide>
-                    <IonSlide>
-                    <FeaturedSpace data={data2} />
-                    </IonSlide>
-                    <IonSlide>
-                    <FeaturedSpace data={data3} />
                     </IonSlide>
                </IonSlides>
                
@@ -148,11 +152,8 @@ let PopularCreator:React.FC<{}>=(props)=>{
                     />
                     <div className='app-pop-creat-pic-holder-main-cont'>
                               <div className='app-pop-creat-pic-holder'>
-                                   <IonImg src={pep1} className='app-pop-creat-pic'/>
-                                   <IonImg src={pep2} className='app-pop-creat-pic'/>
-                                   <IonImg src={pep3} className='app-pop-creat-pic'/>
-                                   <IonImg src={pep4} className='app-pop-creat-pic'/>
-                                   <div className='app-pop-creat-more-pic-cont'>+69</div>     
+                                   <IonImg src={profPlaceholder} className='app-pop-creat-pic'/>
+                                   <div className='app-pop-creat-more-pic-cont'>+0</div>     
                                    
                               </div>
                     </div>
@@ -163,8 +164,7 @@ let PopularCreator:React.FC<{}>=(props)=>{
 
 
 let SpaceFeed:React.FC<{}>=(props)=>{
-     let data1 = new space("Sample Space","Musk Elon",true,ban1)
-
+     let data1 = new space("Placeholder Name","name",true,ban1)
      return(
           <div className='app-space-feed-main-cont'>
                     <DoubleHeader 
@@ -177,25 +177,21 @@ let SpaceFeed:React.FC<{}>=(props)=>{
                          <div className='app-list-space-cont'>
                                    <FeaturedSpace data={data1}/>
                          </div>
-                         <div className='app-list-space-cont'>
-                                   <FeaturedSpace data={data1}/>
-                         </div>
-                         <div className='app-list-space-cont'>
-                                   <FeaturedSpace data={data1}/>
-                         </div>
-                         <div className='app-list-space-cont'>
-                                   <FeaturedSpace data={data1}/>
-                         </div>
-                         <div className='app-list-space-cont'>
-                                   <FeaturedSpace data={data1}/>
-                         </div>
                     </div>                         
           </div>
      )
 }
-export default class Explore<ExploreProps> extends React.Component{
+
+export default class Explore<ExploreProps> extends React.Component<ExploreProps,{
+     userDataLoaded:boolean
+}>{
      constructor(props:ExploreProps){
           super(props);
+          this.state={
+               userDataLoaded:false,
+
+          }
+          this.exploreClassInit = this.exploreClassInit.bind(this);
      }
      doRefresh(event: CustomEvent<RefresherEventDetail>) {
           console.log('Begin async operation');
@@ -205,10 +201,36 @@ export default class Explore<ExploreProps> extends React.Component{
             event.detail.complete();
           }, 2000);
      }
+
+     async exploreInit(){
+          let res = await getUid();
+          console.log("GOT UID = "+res);
+
+     } 
+     exploreClassInit(reloadBool?:boolean){
+          if(reloadBool!){
+               console.log("Explore: reload uid"+user.getUserUid());          
+          }
+          if(user.getUserUid())backendHelper = new BackendHelper(user.getUserUid()!);
+          if(backendHelper){
+               backendHelper._getUserInfo().then((res:any)=>{
+                    if(res.errBool!==true){
+                         user.setUserData(res.data);
+                         if(user.getUserData()?.init_bool===false){
+                             // history.replace('/editprofile');
+                         }
+                    }
+               });
+          }
+     }
+     componentDidMount(){
+          console.log("Explore: explore init uid"+user.getUserUid());
+          this.exploreClassInit(false);
+     }
      render(){
           return(
                    <IonPage >
-                    <IonContent fullscreen className='app-content-main-cont'>
+                    <IonContent fullscreen className='app-content-main-cont '>
                          <IonRefresher slot="fixed" onIonRefresh={this.doRefresh}>
                               <IonRefresherContent></IonRefresherContent>
                               </IonRefresher>

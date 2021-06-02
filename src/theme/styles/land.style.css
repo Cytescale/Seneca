@@ -196,6 +196,7 @@
      --color:#fff;
      height: 62px;
      display: flex;
+     padding-right: 12px;
      justify-content: center;
      border-bottom: 1px solid var(--env-color-s2);
 }
@@ -269,6 +270,8 @@
      font-weight: 700;
      font-size: 17px;
      margin-top: 22px;
+     display: flex;
+     justify-content: center;
 }
 
 .app-profile-bio-main-cont{
@@ -311,6 +314,8 @@ font-size: 15px;
 margin-top:6px;
 color: #fff;
 font-family: sen;
+display: flex;
+justify-content: center;
 }
 
 .app-profile-main-cont{
