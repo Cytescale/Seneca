@@ -1,4 +1,4 @@
-import {IonTabs,IonAvatar,IonIcon,IonFab,IonTabBar,IonRippleEffect,IonFabButton, IonRouterOutlet,IonTabButton, IonContent,IonButton, IonHeader, IonSlides, IonSlide,IonRefresher, IonRefresherContent,IonPage, IonItem,IonLabel,IonImg,IonInput,IonTitle, IonToolbar, useIonRouter } from '@ionic/react';
+import {IonTabs,IonAvatar,IonIcon,IonModal,IonFab,IonTabBar,IonRippleEffect,IonFabButton, IonRouterOutlet,IonTabButton, IonContent,IonButton, IonHeader, IonSlides, IonSlide,IonRefresher, IonRefresherContent,IonPage, IonItem,IonLabel,IonImg,IonInput,IonTitle, IonToolbar, useIonRouter } from '@ionic/react';
 import { add,mic } from 'ionicons/icons';
 import { RefresherEventDetail } from '@ionic/core';
 import { chevronDownCircleOutline } from 'ionicons/icons';
@@ -14,7 +14,7 @@ import pep3 from '../../../assets/placeholders/pep3.jpg'
 import pep4 from '../../../assets/placeholders/pep4.jpg'
 
 
-
+import Profile from '../profileView';
 
 import { Mic_UnSelec} from '../../../assets';
 
@@ -34,6 +34,7 @@ interface spaceInter{
      creator_name:string
      banner_art_src:any|null
      isLive:boolean
+     suid:string|null
 }    
 
 class space implements spaceInter{
@@ -41,31 +42,33 @@ class space implements spaceInter{
      creator_name = "Placeholder name";
      banner_art_src = null;
      isLive = false;
-     constructor(name:string,creator_name:string,isLive:boolean,banner_art_src?:any,){
+     suid;
+     constructor(name:string,creator_name:string,isLive:boolean,uid:string|null,banner_art_src?:any,){
           this.name = name;
           this.creator_name = creator_name;
           this.banner_art_src = banner_art_src;
           this.isLive = isLive;
+          this.suid = uid;
      }
 }
 
-let FeaturedSpace:React.FC<{data:spaceInter}> =(props)=>{
+let FeaturedSpace:React.FC<{data:spaceInter,setProfileModal:any}> =(props)=>{
 
      let router = useIonRouter();
      return(
 
-          <div className='ion-activatable ripple-parent app-feat-space-main-cont' 
-                    onClick={()=>{
-                         router.push('/space','root','push');
-                    }}
-               >
+          <div className=' app-feat-space-main-cont' >
                 
-               <IonImg src={props.data.banner_art_src} className='app-feat-space-ban-art'/>
+               <IonImg src={props.data.banner_art_src} className='ion-activatable ripple-parent app-feat-space-ban-art' onClick={()=>{
+                         router.push('/space','root','push');
+                    }}/>
                
                <div className='app-feat-space-bottom-main-cont'>
                     <div className='app-feat-space-bottom-name-main-cont'>
                          <div className='app-feat-space-bottom-name-ava-main-cont'>
-                              <IonImg src={profPlaceholder} className='app-feat-space-left-pro-ico'></IonImg>
+                              <IonImg src={profPlaceholder} className='ion-activatable ripple-parent app-feat-space-left-pro-ico' onClick={()=>{
+                                   props.setProfileModal(true,props.data.suid);
+                              }}></IonImg>
                          </div>
                          <div>
                               <div className='app-feat-space-bottom-name'>
@@ -93,13 +96,13 @@ let FeaturedSpace:React.FC<{data:spaceInter}> =(props)=>{
      )
 }
 
-let  FeaturedSpaceSlider:React.FC<{}>=(props)=>{
-     let data1 = new space("Placeholder Name","name",true,ban1)
+let  FeaturedSpaceSlider:React.FC<{showModal:any}>=(props:any)=>{
+     let data1 = new space("Placeholder Name","name",true,'CvTBt6cgZCOwtKhQFgC3BdoIanS2',ban1)
      return(
           <div>
                  <IonSlides pager={false} options={{initialSlide: 0,speed: 400}}>
                     <IonSlide>
-                    <FeaturedSpace data={data1} />
+                    <FeaturedSpace data={data1} setProfileModal={props.showModal}/>
                     </IonSlide>
                </IonSlides>
                
@@ -163,8 +166,8 @@ let PopularCreator:React.FC<{}>=(props)=>{
 }
 
 
-let SpaceFeed:React.FC<{}>=(props)=>{
-     let data1 = new space("Placeholder Name","name",true,ban1)
+let SpaceFeed:React.FC<{showModal:any}>=(props:any)=>{
+     let data1 = new space("Placeholder Name","name",true,'CvTBt6cgZCOwtKhQFgC3BdoIanS2',ban1)
      return(
           <div className='app-space-feed-main-cont'>
                     <DoubleHeader 
@@ -175,24 +178,45 @@ let SpaceFeed:React.FC<{}>=(props)=>{
 
                     <div className='app-space-feed-list-cont'>
                          <div className='app-list-space-cont'>
-                                   <FeaturedSpace data={data1}/>
+                                   <FeaturedSpace data={data1} setProfileModal={props.showModal}/>
                          </div>
                     </div>                         
           </div>
      )
 }
 
+let ProfileView : React.FC<{showModal:boolean,suid:string,setShowModal:any}> = (props)=>{
+     return(
+          <IonModal
+          isOpen={props.showModal}
+          cssClass='app-modal-main-cont'
+          swipeToClose={true}
+          onDidDismiss={() => props.setShowModal(false,'null')}>
+          <Profile setModal={props.setShowModal} suid={props.suid} />
+     </IonModal>
+     )
+}
+
 export default class Explore<ExploreProps> extends React.Component<ExploreProps,{
      userDataLoaded:boolean
+     profileModalShow:boolean
+     profileModalUid:string
 }>{
      constructor(props:ExploreProps){
           super(props);
           this.state={
                userDataLoaded:false,
-
+               profileModalShow:false,
+               profileModalUid:'null'
           }
           this.exploreClassInit = this.exploreClassInit.bind(this);
+          this.setProfileModal = this.setProfileModal.bind(this);
      }
+
+     setProfileModal(val:boolean,uid?:string){
+          this.setState({profileModalShow:val ,profileModalUid:uid!})
+     }
+
      doRefresh(event: CustomEvent<RefresherEventDetail>) {
           console.log('Begin async operation');
         
@@ -217,7 +241,7 @@ export default class Explore<ExploreProps> extends React.Component<ExploreProps,
                     if(res.errBool!==true){
                          user.setUserData(res.data);
                          if(user.getUserData()?.init_bool===false){
-                             // history.replace('/editprofile');
+                             history.replace('/editprofile');
                          }
                     }
                });
@@ -243,16 +267,20 @@ export default class Explore<ExploreProps> extends React.Component<ExploreProps,
                                    secString="Best spaces curated  by us"  
                                    secStringVisi
                                    />
-                                   <FeaturedSpaceSlider/>
+                                   <FeaturedSpaceSlider showModal={this.setProfileModal}/>
                                    <PopularCreator/>
-                                   <SpaceFeed/>
+                                   <SpaceFeed showModal={this.setProfileModal}/>
                               </div>
+                              <div className='app-content-fader-main-cont'/>
+                                   
+                              
                               </IonContent>        
                               <IonFab vertical="bottom" horizontal="end" slot="fixed" className='app-fab-main-butt'>
                                    <IonFabButton className='app-fab-main-butt-butt'>
                                         <IonImg src={Mic_UnSelec}></IonImg>
                                    </IonFabButton>
                               </IonFab>
+                              <ProfileView showModal={this.state.profileModalShow} suid={this.state.profileModalUid} setShowModal={this.setProfileModal}/>
                     </IonPage>
          );
      }

@@ -15,17 +15,19 @@ import {IonContent,
 import { Redirect, Route } from 'react-router-dom';
 import '../../../theme/styles/land.style.css';
 import { ProfileProps } from '../../../types/land/land.type';
-import {More_verti,profPlaceholder} from '../../../assets/';
+import {More_verti,profPlaceholder,downArrow} from '../../../assets/';
 import pep2 from '../../../assets/placeholders/pep2.jpg'
 import { setToken,setUid } from '../../../api/firebaseHelper';
 import history from '../../history';
-import User from '../../../components/user';
+import User, { userData } from '../../../components/user';
 
 
 import BackendHelper from '../../../api/backendHelper';
 import { getUid } from '../../../api/firebaseHelper';
 let backendHelper:BackendHelper|null = null;
 const user = new User();
+let  gotUser:userData|null = null;
+
 
 const Bottomsheet:React.FC<{}> = (props)=>{
      const [showActionSheet, setShowActionSheet] = useState(false);
@@ -40,14 +42,10 @@ const Bottomsheet:React.FC<{}> = (props)=>{
         onDidDismiss={() => setShowActionSheet(false)}
         cssClass='my-custom-class'
         buttons={[{
-               text: 'Logout',
+               text: 'Block',
                role: 'destructive',
                handler: () => {
-                    user.setUserToken(null);
-                    user.setUserUid(null);
-                    setToken('null');
-                    setUid('null');
-                    router.push('/login','none','replace');    
+
                }
           }, 
           {
@@ -64,22 +62,25 @@ const Bottomsheet:React.FC<{}> = (props)=>{
 }
 
 
-const EditButton:React.FC<{}> = (props)=>{
+const FollowButton:React.FC<{}> = (props)=>{
      const rtr = useIonRouter();
      return(
-          <IonButton  className='app-profile-pic-cont-butt' onClick={()=>{
+          <IonButton  className='app-profile-view-pic-cont-butt' onClick={()=>{
                rtr.push('/editprofile','forward','push');    
-         }} >Edit profile</IonButton>
+         }} >Follow</IonButton>
      );
 }
 
+interface profileViewInter  {
+     setModal:any
+     suid:string|null
+}
 
-
-export default class Profile<ProfileProps> extends React.Component<{},{
+export default class ProfileView<profileViewInter> extends React.Component<any,{
      userDataLoaded:boolean
 }>{
      
-     constructor(props:ProfileProps){
+     constructor(props:profileViewInter){
           super(props);
           this.state={
                userDataLoaded:true
@@ -94,32 +95,34 @@ export default class Profile<ProfileProps> extends React.Component<{},{
 
      profileClassInit(reloadBool?:boolean){
           if(reloadBool!){
-               console.log("Profile: reload uid"+user.getUserUid());          
+               console.log("Profile View: reload uid"+this.props.suid);          
           }
-          if(user.getUserUid())backendHelper = new BackendHelper(user.getUserUid()!);
+          if(this.props.suid)backendHelper = new BackendHelper(this.props.suid!);
           if(backendHelper){
                backendHelper._getUserInfo().then((res:any)=>{
+                    console.log("HIT");
                     if(res.errBool!==true){
-                         user.setUserData(res.data);
-                         this.setUserDataLoad(false);
-                         console.log(user.getUserData()!.cname);
+                         gotUser = res.data;
+                         this.setUserDataLoad(true);
                     }
                });
           }
      }
 
      componentDidMount(){
-          console.log("Profile: init uid"+user.getUserUid());
+          console.log("Profile View: uid"+this.props.suid);  
           this.profileClassInit(false);
      }
 
      render(){
           return(
                <IonPage >
-               <IonContent fullscreen className='app-content-main-cont'>
-               <IonToolbar className='app-toolbar-main-cont'>
+               <IonContent fullscreen className='profile-view-main-cont'>
+               <IonToolbar className='app-toolbar-main-cont profile-view-head-main'>
                <IonButtons slot="start">
-                    {/* <IonBackButton defaultHref="/land" /> */}
+                    <IonButton onClick={()=>{
+                         this.props.setModal(false);
+                         }}><IonImg src={downArrow}/></IonButton>
                </IonButtons>
                <div className='app-toolbar-tit-main-cont'>
                <IonTitle> {this.state.userDataLoaded?<IonSkeletonText animated style={{width:'100%',height:'22px','--border-radius':'4px'}}/>:
@@ -136,7 +139,7 @@ export default class Profile<ProfileProps> extends React.Component<{},{
                                         <div className='app-profile-pic-inner-cont'>
                                         <IonImg src={profPlaceholder} className='app-profile-pic-cont-ico'/>
                                         <div className='app-profile-pic-cont-butt-cont'>
-                                           <EditButton/>
+                                           <FollowButton/>
                                         </div>
                                         </div>
                                    } 

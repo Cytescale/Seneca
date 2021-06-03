@@ -3,7 +3,33 @@
      
      --background: var(--env-color-s1);
 }
+.app-modal-main-cont{
+     margin-top: 0px;
+     --background:transparent;
+}
+.app-bottombar-lab-tit{
+     font-size: 12px;
+     font-family: sen;
+     margin-top: 5px;
+     color:#fff;
+}
 
+.app-edit-profile-err-cont{
+     padding-left: 22px;
+     padding-right: 22px;
+     margin-top: 12px;
+}    
+
+.app-content-fader-main-cont{
+     height: 72px;
+     width: 100%;
+     position: fixed;
+     top: 0;
+     left: 0;
+     right: 0;
+     background: linear-gradient(180deg, #0F0F0F 0%, rgba(15, 15, 15, 0.44) 50%, rgba(15, 15, 15, 0) 100%);
+     z-index: 99999;
+}
 .placeholder_cont{
      height: 200px;
      width: 100%;
@@ -202,8 +228,8 @@
 }
 .app-toolbar-tit-main-cont{
      font-family: sen;
-     font-weight: 600;
-     font-size: 14px;
+     font-weight: 700;
+     font-size: 12px;
      position: fixed;
      left: 0;
      right: 0;
@@ -574,4 +600,24 @@ color: #f1f1f1;
 }
 .send-butt-cont{
      margin-right: 7px;
+}
+
+.profile-view-main-cont{
+     --background: #111111;
+}
+
+.app-profile-view-pic-cont-butt{
+     width: 120px;
+     height: 32px;
+     font-size: 14px;
+     font-family: sen;
+     text-transform: none;
+     --background: var(--primary-color-light);
+     
+}
+.profile-view-head-main{
+     --background: #111111;
+     border-top-left-radius: 12px;
+     border-top-right-radius: 12px;
+     height: 52px;
 }

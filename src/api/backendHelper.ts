@@ -1,6 +1,9 @@
 import axios from 'axios';
 import URLS from './api.routes';
 import imageKitCert from '../certs/imagekit.config';
+import {userData} from '../components/user';
+
+
 
 export default class BackendHelper{
      UID :string|null = null;
@@ -8,6 +11,19 @@ export default class BackendHelper{
           this.UID = UID!;
      }
      
+     async _updateUserInfo(data:userData){
+          let respn =  null;
+           await axios.post(URLS.updateUserInfo,{uid:this.UID,data:data})
+              .then(res=>{
+                respn = res.data;
+              })
+              .catch(err=>{
+ 
+                   console.log(err);
+              });
+           return respn;
+      }
+
      async _getUserInfo(){
          let respn =  null;
           await axios.post(URLS.getUserInfo,{uid:this.UID})
@@ -30,6 +46,7 @@ export default class BackendHelper{
                  }
              })
              .catch(err=>{
+                  
                   console.log(err);
                
              });

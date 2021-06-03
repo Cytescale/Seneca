@@ -30,7 +30,7 @@
 .app-edit-profile-data-main-cont{
      margin-top: 12px;
      border-top: 1px solid var(--env-color-s2);
-     border-bottom: 1px solid var(--env-color-s2);
+     
      padding-bottom: 22px;
  
 }

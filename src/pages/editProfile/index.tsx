@@ -12,14 +12,17 @@ import {IonContent,
       IonItem,
       IonLabel,
       IonInput,
+      IonLoading,
       IonImg, 
-      IonSkeletonText ,
+      IonSkeletonText,
       IonTextarea ,
+      useIonLoading,
+      IonToast,
       useIonRouter} from '@ionic/react';
 import { Redirect, Route } from 'react-router-dom';
 import '../../theme/styles/editprofile.style.css';
 import { editProfileProps } from '../../types/land/land.type';
-import {More_verti,profPlaceholder} from '../../assets/';
+import {More_verti,profPlaceholder,CancelIco} from '../../assets/';
 import pep2 from '../../../assets/placeholders/pep2.jpg'
 import { setToken,setUid } from '../../api/firebaseHelper';
 import history from '../history';
@@ -67,16 +70,98 @@ const Bottomsheet:React.FC<{}> = (props)=>{
      )
 }
 
+interface LoadingProps {}
+
+
+
+const ErrorNoti:React.FC<{
+     shown:boolean , 
+     text:string,
+     hide(val:boolean,str:string):void
+     }>=
+     (props:{shown:boolean,text:string,hide(val:boolean,str:string):void})=>{
+     let [shown,setShow] = useState<boolean>(props.shown);
+     if(shown===true){
+          return(
+               <div className='app-err-noti-main-cont'>
+                    {props.text}
+                    <IonImg src={CancelIco} className='app-err-noti-main-cont-ico' onClick={()=>{
+                         props.hide(false,"null")
+                    }}></IonImg>
+               </div>
+          )
+     }else{return(<div />)}
+}
+
+
+const LoadingExample: React.FC<LoadingProps> = () => {
+     const [present] = useIonLoading();
+     return (
+       <IonPage>
+         <IonContent>
+           <IonButton
+             expand="block"
+             onClick={() =>
+               present({
+                 duration: 3000,
+               })
+             }
+           >
+             Show Loading
+           </IonButton>
+           <IonButton
+             expand="block"
+             onClick={() => present('Loading', 2000, 'dots')}
+           >
+             Show Loading using params
+           </IonButton>
+         </IonContent>
+       </IonPage>
+     );
+   };
+
 export default class EditProfile<editProfileProps> extends React.Component<{},{
      userDataLoaded:boolean
+     loading:boolean
+     errBool:boolean
+     errStr:string
+     toastBool:boolean
+     toastStr:string
 }>{
      constructor(props:editProfileProps){
           super(props);
           this.state={
-               userDataLoaded:true
+               userDataLoaded:true,
+               loading:false,
+               errBool:false,
+               errStr:"Null",
+               toastBool:false,
+               toastStr:"null"
           }
           this.setUserDataLoad = this.setUserDataLoad.bind(this);
           this.profileClassInit = this.profileClassInit.bind(this);
+          this.setLoading = this.setLoading.bind(this);
+          this.profileSaveProcess = this.profileSaveProcess.bind(this);
+          this.setErr = this.setErr.bind(this);
+          this.setToast = this.setToast.bind(this);
+     }
+
+     setToast(bool:boolean,str:string){
+          this.setState({
+               toastBool:bool,
+               toastStr:str
+          })
+     }
+
+     setErr(bool:boolean,str:string){
+          this.setState({
+               errBool:bool,
+               errStr:str
+          })
+     }
+
+     setLoading(val:boolean){
+          this.setState({loading:val});
      }
 
      setUserDataLoad(val:boolean){
@@ -98,6 +183,48 @@ export default class EditProfile<editProfileProps> extends React.Component<{},{
           }
      }
 
+     async profileSaveProcess(){
+          this.setLoading(true);
+          await backendHelper?._updateUserInfo(editUser!).then((res:any)=>{
+              console.log(res);
+               if(res){
+                   if(res.errBool === false){
+                    this.setToast(true,"Profile updated");
+                    this.setErr(false,"null");
+                   }
+                   else{
+                    switch(res.errCode){
+                         case 1:{
+                              this.setErr(true,"Data extraction failed");
+                              break;
+                         }
+                         case 2:{
+                              this.setErr(true,"Update failed");
+                              break;
+                         }
+                         case 3:{
+                              this.setErr(true,"Missing uid");
+                              break;
+                         }
+                         case 4:{
+                              this.setErr(true,"Username exist");
+                              break;
+                         }
+                         default:{
+                              this.setErr(true,"Fatal error");
+                              break;
+                         }
+                    }    
+                   }
+               
+              }
+              else{
+               this.setErr(true,"Fatal error");
+              }
+          });
+          this.setLoading(false);
+     }
+
      componentDidMount(){
           console.log("Profile: init uid"+user.getUserUid());
           this.profileClassInit(false);
@@ -109,15 +236,13 @@ export default class EditProfile<editProfileProps> extends React.Component<{},{
                <IonContent fullscreen className='app-content-main-cont'>
                <IonToolbar className='app-toolbar-main-cont'>
                <IonButtons slot="start">
-                    
-                    {this.state.userDataLoaded?editUser?.init_bool==true?<IonBackButton defaultHref="/land" />:null:null}
-                   
+                    {this.state.userDataLoaded===false?editUser?.init_bool===true?<IonBackButton defaultHref="/land" />:null:null}
                </IonButtons>
                <div className='app-toolbar-tit-main-cont'>
                <IonTitle className='app-toolbar-tit'> Edit Profile </IonTitle>
                </div>
                <IonButtons slot="end">
-                    <IonButton  className='app-edit-prof-save-butt'>Save</IonButton>
+                    <IonButton  className='app-edit-prof-save-butt' onClick={this.profileSaveProcess} > Save</IonButton>
                </IonButtons>
                
                </IonToolbar>
@@ -137,19 +262,34 @@ export default class EditProfile<editProfileProps> extends React.Component<{},{
                          <div className='app-edit-profile-data-main-cont'>
                          <IonItem  className='app-edit-profile-data-item-cont'>
                          <IonLabel className='app-edit-profile-data-lab-cont'><div className='app-edit-profile-data-lab'>Display name</div></IonLabel>
-                         <IonInput className='app-edit-profile-data-inp' value={editUser?.dname}></IonInput>
+                         <IonInput className='app-edit-profile-data-inp' value={editUser?.dname}  onIonChange={e =>{editUser!.dname = e.detail.value!}} ></IonInput>
                          </IonItem>
                          
                          <IonItem  className='app-edit-profile-data-item-cont'>
                          <IonLabel className='app-edit-profile-data-lab-cont'><div className='app-edit-profile-data-lab'>Username</div></IonLabel>
-                         <IonInput className='app-edit-profile-data-inp' value={editUser?.uname}></IonInput>
+                         <IonInput className='app-edit-profile-data-inp' value={editUser?.uname} onIonChange={e =>{editUser!.uname = e.detail.value!}}  ></IonInput>
                          </IonItem>
                          <IonItem  className='app-edit-profile-data-item-cont'>
                          <IonLabel className='app-edit-profile-data-lab-cont'><div className='app-edit-profile-data-lab'>Bio</div></IonLabel>
-                         <IonTextarea className='app-edit-profile-data-inp edit-txt-ara' value={editUser?.bio}></IonTextarea>
+                         <IonTextarea className='app-edit-profile-data-inp edit-txt-ara' value={editUser?.bio} onIonChange={e =>{editUser!.bio = e.detail.value!}} ></IonTextarea>
                          </IonItem>
+                              <div className='app-edit-profile-err-cont'>
+                              {this.state.errBool?<ErrorNoti  shown={true} text={this.state.errStr} hide={(val:boolean,str:string)=>this.setErr(val,str)}/>:<span/>}
+                              </div>
                          </div>}
                     </div>
+                    <IonLoading
+                         cssClass='my-custom-class'
+                         isOpen={this.state.loading}
+                         onDidDismiss={()=>this.setLoading(false)}
+                         message={'Please wait...'}
+                         />
+                          <IonToast
+                    isOpen={this.state.toastBool}
+                    onDidDismiss={() => this.setToast(false,"null")}
+                    message={this.state.toastStr}
+                    duration={600}
+                    />
                </IonContent>
                </IonPage>
           )

@@ -51,6 +51,7 @@ function validateEmail(email:string):boolean{
  }
 
 const  loginCallback = (res:serverReponse,callback:any)=>{
+     if(res){
      if(res.error){
           switch(res.error.errMess){
                case 'auth/user-not-found':{
@@ -76,6 +77,9 @@ const  loginCallback = (res:serverReponse,callback:any)=>{
           setUid(res.resMess.uid);
          history.replace('/land/explore');
          console.log("login | "+res.resMess);
+     }}
+     else{
+          callback(true,"Fatal occured");  
      }
 
 }

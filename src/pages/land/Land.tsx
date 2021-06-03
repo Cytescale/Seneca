@@ -52,15 +52,19 @@ const TabCont:React.FC<{isAuth:boolean,setAuth:any}>=(props:{isAuth:boolean,setA
                               <IonTabBar slot="bottom" className='app-bottombar-main-cont'>
                                    <IonTabButton tab="home"  href='/land/home'>
                                    <IonImg src={Home_UnSelec} className='app-bottombar-ico' />
+                                   <IonLabel className='app-bottombar-lab-tit'>Home</IonLabel>
                                    </IonTabButton>
                                    <IonTabButton tab="explore" href='/land/explore' >
                                    <IonImg src={Expl_UnSelec} className='app-bottombar-ico'/>
+                                   <IonLabel className='app-bottombar-lab-tit'>Explore</IonLabel>
                                    </IonTabButton> 
                                    <IonTabButton tab="search" href='/land/search'>
                                    <IonImg src={Search_UnSelec} className='app-bottombar-ico' />
+                                   <IonLabel className='app-bottombar-lab-tit'>Search</IonLabel>
                                    </IonTabButton>
                                    <IonTabButton tab="profile"  href='/land/profile'>
                                    <IonImg src={Profile_UnSelec} className='app-bottombar-ico' />
+                                   <IonLabel className='app-bottombar-lab-tit'>Profile</IonLabel>
                                    </IonTabButton>
                               </IonTabBar>     
                          </IonTabs>

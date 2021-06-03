@@ -6,11 +6,13 @@ if(process.env.NODE_ENV=='development'){
 type URLinter = {
      backendInit:string
      getUserInfo: string
+     updateUserInfo:string
      imagekitAuth:string
 }
 const URLS:URLinter = {
      getUserInfo:_BASE_API_URL+'db/getUser',
      imagekitAuth:_BASE_API_URL+"cdn/imageKitAuth",
+     updateUserInfo:_BASE_API_URL+"db/updateUser",
      backendInit : _BASE_API_URL+'firebase_firestore_init'
 }
 export default URLS;
