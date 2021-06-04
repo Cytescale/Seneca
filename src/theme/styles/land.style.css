@@ -612,9 +612,21 @@ color: #f1f1f1;
      font-size: 14px;
      font-family: sen;
      text-transform: none;
+     color: #fff;
      --background: var(--primary-color-light);
      
 }
+
+.app-profile-view-pic-cont-butt-unfol{
+     width: 120px;
+     height: 32px;
+     font-size: 14px;
+     font-family: sen;
+     text-transform: none;
+     color: #fff;
+     --background: var(--ion-color-danger);
+}
+
 .profile-view-head-main{
      --background: #111111;
      border-top-left-radius: 12px;

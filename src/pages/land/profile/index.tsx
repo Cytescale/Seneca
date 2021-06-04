@@ -77,16 +77,35 @@ const EditButton:React.FC<{}> = (props)=>{
 
 export default class Profile<ProfileProps> extends React.Component<{},{
      userDataLoaded:boolean
+     followCountLoaded:boolean
+     followers:number
+     following:number
 }>{
      
      constructor(props:ProfileProps){
           super(props);
           this.state={
-               userDataLoaded:true
+               userDataLoaded:true,
+               followCountLoaded:false,
+               followers:0,
+               following:0,
           }
           this.setUserDataLoad = this.setUserDataLoad.bind(this);
           this.profileClassInit = this.profileClassInit.bind(this);
+          this.setFollowCountBool  =this.setFollowCountBool.bind(this);
+          this.setFollowCount = this.setFollowCount.bind(this);
      }
+
+     setFollowCount(followers:number,following:number){
+          this.setState({
+               followers:followers,
+               following:following}
+               )
+     }
+     setFollowCountBool(val:boolean){
+          this.setState({followCountLoaded:val})
+     }
+
 
      setUserDataLoad(val:boolean){
           this.setState({userDataLoaded:val})
@@ -100,6 +119,15 @@ export default class Profile<ProfileProps> extends React.Component<{},{
           if(backendHelper){
                backendHelper._getUserInfo().then((res:any)=>{
                     if(res.errBool!==true){
+                         backendHelper?._getFollowCount(user.getUserUid()!,user.getUserUid()!).then((cres:any)=>{
+                              if(cres.errBool==false){
+                                   this.setFollowCount(cres.data.follCount.followers,cres.data.follCount.following)
+                                   this.setFollowCountBool(true);
+                              }
+                              else{
+                                   console.log(cres.errMess);
+                              }
+                         });
                          user.setUserData(res.data);
                          this.setUserDataLoad(false);
                          console.log(user.getUserData()!.cname);
@@ -160,13 +188,13 @@ export default class Profile<ProfileProps> extends React.Component<{},{
                                              <div className='app-profile-tab-tit'>Followers</div>
                                              <div className='app-profile-tab-count'>
                                              {this.state.userDataLoaded?<IonSkeletonText className='app-skelt-main-cont' animated style={{width:'80px',height:'22px','--border-radius':'4px'}}/>:
-                                             <span>0</span>
+                                             <span>{this.state.followers}</span>
                                              }</div>
                                    </div>
                                    <div className='app-profile-tab-main-cont'>
                                              <div className='app-profile-tab-tit'>Following</div>
                                              <div className='app-profile-tab-count'>{this.state.userDataLoaded?<IonSkeletonText animated style={{width:'80px',height:'22px','--border-radius':'4px'}}/>:
-                                             <span>0</span>
+                                             <span>{this.state.following}</span>
                                              }</div>
                                    </div>
                          </div>

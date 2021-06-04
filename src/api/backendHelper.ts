@@ -11,6 +11,8 @@ export default class BackendHelper{
           this.UID = UID!;
      }
      
+
+
      async _updateUserInfo(data:userData){
           let respn =  null;
            await axios.post(URLS.updateUserInfo,{uid:this.UID,data:data})
@@ -23,6 +25,56 @@ export default class BackendHelper{
               });
            return respn;
       }
+
+      async _delFollow(uid:string,suid:string){
+          let respn =  null;
+          await axios.post(URLS.delFollow,{uid:uid,suid:suid})
+             .then(res=>{
+               respn = res.data;
+             })
+             .catch(err=>{
+                  console.log(err);
+             });
+          return respn;
+      }
+      async _getFollowCount(uid:string,suid:string){
+          let respn =  null;
+          await axios.post(URLS.getFollowCount,{uid:uid,suid:suid})
+             .then(res=>{
+               respn = res.data;
+             })
+             .catch(err=>{
+                  console.log(err);
+             });
+          return respn;
+      }
+
+
+      async _addFollow(uid:string,suid:string){
+          let respn =  null;
+          await axios.post(URLS.addFollow,{uid:uid,suid:suid})
+             .then(res=>{
+               respn = res.data;
+             })
+             .catch(err=>{
+                  console.log(err);
+             });
+          return respn;
+      }
+
+      async _getFollowedBool(uid:string,suid:string){
+          let respn =  null;
+           await axios.post(URLS.getFollowBool,{uid:uid,suid:suid})
+              .then(res=>{
+                respn = res.data;
+              })
+              .catch(err=>{
+                   console.log(err);
+              });
+           return respn;
+      }
+ 
+
 
      async _getUserInfo(){
          let respn =  null;

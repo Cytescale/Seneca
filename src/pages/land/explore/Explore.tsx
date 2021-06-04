@@ -66,8 +66,14 @@ let FeaturedSpace:React.FC<{data:spaceInter,setProfileModal:any}> =(props)=>{
                <div className='app-feat-space-bottom-main-cont'>
                     <div className='app-feat-space-bottom-name-main-cont'>
                          <div className='app-feat-space-bottom-name-ava-main-cont'>
-                              <IonImg src={profPlaceholder} className='ion-activatable ripple-parent app-feat-space-left-pro-ico' onClick={()=>{
-                                   props.setProfileModal(true,props.data.suid);
+                              <IonImg src={profPlaceholder} className='ion-activatable ripple-parent app-feat-space-left-pro-ico' 
+                              onClick={()=>{
+                                   if(user.getUserUid() === props.data.suid){
+                                        router.push('/land/profile','forward','push');
+                                   }
+                                   else{
+                                        props.setProfileModal(true,props.data.suid);
+                                   }                                   
                               }}></IonImg>
                          </div>
                          <div>
@@ -97,7 +103,7 @@ let FeaturedSpace:React.FC<{data:spaceInter,setProfileModal:any}> =(props)=>{
 }
 
 let  FeaturedSpaceSlider:React.FC<{showModal:any}>=(props:any)=>{
-     let data1 = new space("Placeholder Name","name",true,'CvTBt6cgZCOwtKhQFgC3BdoIanS2',ban1)
+     let data1 = new space("Placeholder Name","name",true,'CLvI6ewbCda1GbYBFpnjYG4clS03',ban1)
      return(
           <div>
                  <IonSlides pager={false} options={{initialSlide: 0,speed: 400}}>
