@@ -2,7 +2,7 @@ let _BASE_API_URL = process.env.PUBLIC_API_HOST
 if(process.env.NODE_ENV=='development'){
      _BASE_API_URL = 'http://172.20.10.6:3000/api/'
 }
-//_BASE_API_URL = 'https://titan-git-dev-cytescale.vercel.app/api/'
+_BASE_API_URL = 'https://titan-git-dev-cytescale.vercel.app/api/'
 
 
 type URLinter = {
