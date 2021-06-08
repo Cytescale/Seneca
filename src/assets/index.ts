@@ -8,6 +8,7 @@ import Search_Selec from './svg/search-selec.svg';
 import Expl_Selec from './svg/expl-selec.svg';
 import Profile_Selec from './svg/profile-selec.svg';
 import Mic_UnSelec from './svg/mic-unselec.svg';
+import Mic_Mute_UnSelec from './svg/mic-mute-unselec.svg';
 import More_verti from './svg/more-verti.svg';
 import Call_end from './svg/call-end.svg';
 import Person_add from './svg/person-add.svg';
@@ -35,5 +36,6 @@ export {CancelIco,
      Send,
      Profile_placeholder,
      profPlaceholder,
-     downArrow
+     downArrow,
+     Mic_Mute_UnSelec
 }; 

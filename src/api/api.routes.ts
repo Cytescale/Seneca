@@ -11,6 +11,7 @@ type URLinter = {
      delFollow:string
      getFollowCount:string
      updateUserInfo:string
+     createSpace:string
      imagekitAuth:string
 }
 const URLS:URLinter = {
@@ -21,6 +22,7 @@ const URLS:URLinter = {
      getFollowCount:_BASE_API_URL+"db/getFollCount",
      delFollow:_BASE_API_URL+"db/delUserFollow",
      addFollow:_BASE_API_URL+"db/addUserFollow",
+     createSpace:_BASE_API_URL+"agora/createSpace",
      backendInit : _BASE_API_URL+'firebase_firestore_init'
 }
 export default URLS;

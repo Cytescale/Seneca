@@ -11,6 +11,7 @@ import {IonContent,
       IonBackButton,
       IonImg, 
       IonSkeletonText ,
+      withIonLifeCycle,
       useIonRouter} from '@ionic/react';
 import { Redirect, Route } from 'react-router-dom';
 import '../../../theme/styles/land.style.css';
@@ -75,7 +76,7 @@ const EditButton:React.FC<{}> = (props)=>{
 
 
 
-export default class Profile<ProfileProps> extends React.Component<{},{
+ class Profile<ProfileProps> extends React.Component<{},{
      userDataLoaded:boolean
      followCountLoaded:boolean
      followers:number
@@ -136,11 +137,22 @@ export default class Profile<ProfileProps> extends React.Component<{},{
           }
      }
 
-     componentDidMount(){
+     ionViewDidEnter(){
           console.log("Profile: init uid"+user.getUserUid());
           this.profileClassInit(false);
      }
 
+     ionViewWillEnter() {
+          
+     }
+      
+        ionViewWillLeave() {
+     
+     }
+     
+        ionViewDidLeave() {
+         
+     }
      render(){
           return(
                <IonPage >
@@ -207,3 +219,5 @@ export default class Profile<ProfileProps> extends React.Component<{},{
           )
      }
 }
+
+export default withIonLifeCycle(Profile)

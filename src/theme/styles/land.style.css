@@ -88,6 +88,9 @@
 .app-feat-space-main-cont{
      width: 100%;
      height: 200px;
+     border-radius: 8px;
+     overflow: hidden;
+     margin-bottom: 18px;
      position: relative;
      
 }
@@ -431,6 +434,8 @@ border-radius: 8px;
 }
 .app-total-listners-main-cont{
      padding: 17px;
+     padding-top:0px;
+     padding-bottom: 12px;
      
 }
 .app-total-listners-tit{
@@ -632,4 +637,11 @@ color: #f1f1f1;
      border-top-left-radius: 12px;
      border-top-right-radius: 12px;
      height: 52px;
+}
+
+.app-space-name-main-cont{
+     font-size: 22px;
+     color: #fff;
+     font-family: sen;
+     padding-bottom: 0px;
 }

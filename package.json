@@ -21,6 +21,7 @@
     "@types/react-dom": "^16.9.10",
     "@types/react-router": "^5.1.11",
     "@types/react-router-dom": "^5.1.7",
+    "agora-rtc-sdk-ng": "^4.5.0",
     "axios": "^0.21.1",
     "cordova-plugin-statusbar": "^2.4.3",
     "firebase": "^8.6.3",

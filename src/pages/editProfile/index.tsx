@@ -262,16 +262,16 @@ export default class EditProfile<editProfileProps> extends React.Component<{},{
                          <div className='app-edit-profile-data-main-cont'>
                          <IonItem  className='app-edit-profile-data-item-cont'>
                          <IonLabel className='app-edit-profile-data-lab-cont'><div className='app-edit-profile-data-lab'>Display name</div></IonLabel>
-                         <IonInput className='app-edit-profile-data-inp' value={editUser?.dname}  onIonChange={e =>{editUser!.dname = e.detail.value!}} ></IonInput>
+                         <IonInput className='app-edit-profile-data-inp' value={editUser!.dname}  onIonChange={e =>{editUser!.dname = e.detail.value!}} ></IonInput>
                          </IonItem>
                          
                          <IonItem  className='app-edit-profile-data-item-cont'>
                          <IonLabel className='app-edit-profile-data-lab-cont'><div className='app-edit-profile-data-lab'>Username</div></IonLabel>
-                         <IonInput className='app-edit-profile-data-inp' value={editUser?.uname} onIonChange={e =>{editUser!.uname = e.detail.value!}}  ></IonInput>
+                         <IonInput className='app-edit-profile-data-inp' value={editUser!.uname} onIonChange={e =>{editUser!.uname = e.detail.value!}}  ></IonInput>
                          </IonItem>
                          <IonItem  className='app-edit-profile-data-item-cont'>
                          <IonLabel className='app-edit-profile-data-lab-cont'><div className='app-edit-profile-data-lab'>Bio</div></IonLabel>
-                         <IonTextarea className='app-edit-profile-data-inp edit-txt-ara' value={editUser?.bio} onIonChange={e =>{editUser!.bio = e.detail.value!}} ></IonTextarea>
+                         <IonTextarea className='app-edit-profile-data-inp edit-txt-ara' value={editUser!.bio} onIonChange={e =>{editUser!.bio = e.detail.value!}} ></IonTextarea>
                          </IonItem>
                               <div className='app-edit-profile-err-cont'>
                               {this.state.errBool?<ErrorNoti  shown={true} text={this.state.errStr} hide={(val:boolean,str:string)=>this.setErr(val,str)}/>:<span/>}

@@ -11,7 +11,21 @@ export default class BackendHelper{
           this.UID = UID!;
      }
      
+     async _getSpace(){
+          
+     }
 
+     async _createSpace(data:any){
+          let respn =  null;
+          await axios.post(URLS.createSpace,data)
+             .then(res=>{
+               respn = res.data;
+             })
+             .catch(err=>{
+                  console.log(err);
+             });
+          return respn;
+      }
 
      async _updateUserInfo(data:userData){
           let respn =  null;
@@ -74,7 +88,18 @@ export default class BackendHelper{
            return respn;
       }
  
-
+      async _getOtherUserInfo(suid:string){
+          let respn =  null;
+           await axios.post(URLS.getUserInfo,{uid:suid})
+              .then(res=>{
+                respn = res.data;
+              })
+              .catch(err=>{
+ 
+                   console.log(err);
+              });
+           return respn;
+      }
 
      async _getUserInfo(){
          let respn =  null;

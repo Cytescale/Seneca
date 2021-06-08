@@ -27,6 +27,7 @@ import { Home_UnSelec,
      Profile_Selec} from '../../assets/'
 import history from '../history';
 import Home from '../Home';
+import SpaceCreate from './spaceCreate';
 
 
 const TabCont:React.FC<{isAuth:boolean,setAuth:any}>=(props:{isAuth:boolean,setAuth:any})=>{
@@ -36,8 +37,9 @@ const TabCont:React.FC<{isAuth:boolean,setAuth:any}>=(props:{isAuth:boolean,setA
           <IonReactRouter history={history} >
             <IonRouterOutlet>
           <Route exact path="/home" component={Home}/>
-          <Route exact path="/space" component={Space}/>
+          <Route path="/space/:sid" component={Space}/>
           <Route exact path="/editprofile" component={EditProfile}/>
+          <Route exact path="/spacecreate" component={SpaceCreate}/>
           <Route exact path="/login" render={()=><Login setAuth={props.setAuth} /> }/>
           <Route path="/land/" render={()=>{
                     return(

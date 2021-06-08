@@ -1,4 +1,4 @@
-import {IonTabs,IonAvatar,IonIcon,IonModal,IonFab,IonTabBar,IonRippleEffect,IonFabButton, IonRouterOutlet,IonTabButton, IonContent,IonButton, IonHeader, IonSlides, IonSlide,IonRefresher, IonRefresherContent,IonPage, IonItem,IonLabel,IonImg,IonInput,IonTitle, IonToolbar, useIonRouter } from '@ionic/react';
+import {IonTabs,IonAvatar,IonIcon,IonModal,IonFab,IonTabBar,IonRippleEffect,IonFabButton,withIonLifeCycle , IonRouterOutlet,IonTabButton, IonContent,IonButton, IonHeader, IonSlides, IonSlide,IonRefresher, IonRefresherContent,IonPage, IonItem,IonLabel,IonImg,IonInput,IonTitle, IonToolbar, useIonRouter } from '@ionic/react';
 import { add,mic } from 'ionicons/icons';
 import { RefresherEventDetail } from '@ionic/core';
 import { chevronDownCircleOutline } from 'ionicons/icons';
@@ -8,6 +8,7 @@ import '../../../theme/styles/land.style.css';
 import React,{CSSProperties, useState} from 'react';
 import {CancelIco,profPlaceholder} from '../../../assets';
 import ban1 from '../../../assets/placeholders/ban1.jpg'
+import ban2 from '../../../assets/placeholders/ban2.jpg'
 import pep1 from '../../../assets/placeholders/pep1.jpg'
 import pep2 from '../../../assets/placeholders/pep2.jpg'
 import pep3 from '../../../assets/placeholders/pep3.jpg'
@@ -22,14 +23,16 @@ import {ExploreProps} from '../../../types/land/land.type';
 
 
 import BackendHelper from '../../../api/backendHelper';
-import { getUid } from '../../../api/firebaseHelper';
+import firebaseHelper, { getUid } from '../../../api/firebaseHelper';
 import User from '../../../components/user';
 import history from '../../history';
 
-let backendHelper:BackendHelper|null = null;
-const user = new User();
 
-interface spaceInter{
+let backendHelper:BackendHelper|null = null;
+let feedBackEndHelper:BackendHelper|null = new BackendHelper("strinf");
+let FirebaseHelper:firebaseHelper|null = new firebaseHelper();
+const user = new User();
+export declare interface spaceInter{
      name:string
      creator_name:string
      banner_art_src:any|null
@@ -52,16 +55,24 @@ class space implements spaceInter{
      }
 }
 
-let FeaturedSpace:React.FC<{data:spaceInter,setProfileModal:any}> =(props)=>{
-
+export let FeaturedSpace:React.FC<{data:spaceFeedInter,setProfileModal:any}> =(props)=>{
+     let [creat_name,setName] = useState(props.data.creator_name);          
+          feedBackEndHelper!._getOtherUserInfo(props.data.suid!).then((ures:any)=>{
+                    if(ures){
+                         if(!ures.errBool){
+                              setName(ures.data.dname);
+                         }
+                    }
+               })
      let router = useIonRouter();
      return(
 
-          <div className=' app-feat-space-main-cont' >
-                
-               <IonImg src={props.data.banner_art_src} className='ion-activatable ripple-parent app-feat-space-ban-art' onClick={()=>{
-                         router.push('/space','root','push');
-                    }}/>
+          <div className='app-feat-space-main-cont' >
+                <div  className='ion-activatable ripple-parent'  onClick={()=>{
+                         router.push(`/space/${props.data.cuid}`,'root','push');
+                    }}>
+               <IonImg src={props.data.banner_art_src?props.data.banner_art_src:ban2} className='ion-activatable ripple-parent app-feat-space-ban-art'/>
+               </div>
                
                <div className='app-feat-space-bottom-main-cont'>
                     <div className='app-feat-space-bottom-name-main-cont'>
@@ -81,15 +92,15 @@ let FeaturedSpace:React.FC<{data:spaceInter,setProfileModal:any}> =(props)=>{
                               {props.data.name}     
                               </div>
                               <div className='app-feat-space-bottom-crea-name'>
-                              {props.data.creator_name}     
+                              {creat_name}     
                               </div>
                          </div>
                     </div>
                     <div className='app-feat-space-bottom-pro-main-cont'>
                          <div  className='app-feat-space-bottom-pro-cont'>
-                         <IonImg src={profPlaceholder} className='app-feat-space-bottom-pro-ico'></IonImg>
+                         {/* <IonImg src={profPlaceholder} className='app-feat-space-bottom-pro-ico'></IonImg> */}
                          </div>
-                         <div className='app-feat-space-bottom-pro-count-cont'>+0</div>
+                         <div className='app-feat-space-bottom-pro-count-cont'>{props.data.listners}</div>
                     </div>
                </div>
                {props.data.isLive===true?<div className='app-feat-live-indi-main-cont'>
@@ -103,7 +114,7 @@ let FeaturedSpace:React.FC<{data:spaceInter,setProfileModal:any}> =(props)=>{
 }
 
 let  FeaturedSpaceSlider:React.FC<{showModal:any}>=(props:any)=>{
-     let data1 = new space("Placeholder Name","name",true,'CLvI6ewbCda1GbYBFpnjYG4clS03',ban1)
+     let data1 = new space("Placeholder Name","name",true,'CLvI6ewbCda1GbYBFpnjYG4clS03',ban2)
      return(
           <div>
                  <IonSlides pager={false} options={{initialSlide: 0,speed: 400}}>
@@ -134,9 +145,11 @@ let WecomeHead:React.FC<{shown?:Boolean}> = (props)=>{
      )
 }
 
+
+
 let DoubleHeader:React.FC<{priString:string,secString?:string,secStringVisi?:boolean,SenStyle?:CSSProperties}> =(props)=>{
      return(
-          <div style={props.SenStyle} className='app-dhead-main-cont'>
+          <div style={props.SenStyle!} className='app-dhead-main-cont'>
                     <div className='app-dhead-sec-str-main-cont' style={{
                          display:props.secString && props.secStringVisi === true?'block':'none',
                     }}>
@@ -173,7 +186,7 @@ let PopularCreator:React.FC<{}>=(props)=>{
 
 
 let SpaceFeed:React.FC<{showModal:any}>=(props:any)=>{
-     let data1 = new space("Placeholder Name","name",true,'CvTBt6cgZCOwtKhQFgC3BdoIanS2',ban1)
+     let data1 = new space("Placeholder Name","name",true,'CvTBt6cgZCOwtKhQFgC3BdoIanS2',ban2)
      return(
           <div className='app-space-feed-main-cont'>
                     <DoubleHeader 
@@ -203,7 +216,169 @@ let ProfileView : React.FC<{showModal:boolean,suid:string,setShowModal:any}> = (
      )
 }
 
-export default class Explore<ExploreProps> extends React.Component<ExploreProps,{
+
+
+export declare interface spaceFeedInter{
+     name?:string
+     des?:string
+     creator_name?:string
+     profile_pic_src?:string|null
+     banner_art_src?:string|null
+     isLive?:boolean
+     cuid?:string|null 
+     suid?:string|null
+     listners?:number
+}    
+
+
+declare interface SacFeedInter {
+     showModal:any
+
+}
+
+declare interface SacFeedStat {
+     feedData:any
+     feedParseData:Array<spaceFeedInter>|null
+}
+
+
+class SacFeed extends React.Component<SacFeedInter,SacFeedStat>{
+     constructor(props:SacFeedInter){
+          super(props);
+          this.state={
+               feedData:null,
+               feedParseData:null,
+          }
+          this.intiSacFeed= this.intiSacFeed.bind(this);
+          this.setInitSacfeed = this.setInitSacfeed.bind(this);
+          this.renderSacFeed = this.renderSacFeed.bind(this);
+          this.setParseData = this.setParseData.bind(this);
+     }
+
+     setParseData(val:any){
+          this.setState({
+               feedParseData:val
+          })
+     }
+
+     setInitSacfeed(val:any){
+          this.setState({feedData:val})
+     }
+
+     renderSacDataFeed(){
+          let resa:any = [];
+          this.state.feedParseData?.forEach((e,ind)=>{
+               resa.push(<FeaturedSpace data={e} setProfileModal={this.props.showModal}/>);
+          })
+          return resa;
+          }
+
+         
+
+     renderSacFeed(){
+          let res:any = [];
+          if(this.state.feedData){
+               for (const data in this.state.feedData) {
+                    let obj =  this.state.feedData[data];
+                    let resData:spaceFeedInter = {
+                         name:obj.name,
+                         des:obj.des,
+                         creator_name:'Holder',
+                         profile_pic_src:null,
+                         banner_art_src:obj.image_url?obj.image_url:ban2,
+                         isLive:obj.isLive!,
+                         cuid:data!,
+                         suid:obj.uid!,
+                         listners:obj.attendee?obj.attendee:0,
+                    } 
+                    res.push(resData);
+               }
+          }
+          console.log("MOUNT");
+          this.setParseData(res);
+     }
+
+     async getSpaceDetails(){
+          if(FirebaseHelper?.getFirebase()){
+               console.log("INITs");
+               var database = FirebaseHelper?.getFirebase()!.database();
+               var spaceRef = database.ref('user_space_det');
+               let resdata  = null;
+               spaceRef.on('value', (snapshot:any) => {
+               const data = snapshot.val();
+               this.setInitSacfeed(data);
+               this.renderSacFeed();
+               });
+          }
+          else{
+               return null;
+          }
+         
+     }
+
+     async intiSacFeed(){
+          console.log("Sacfeed: inti");
+
+          this.getSpaceDetails();
+     }
+
+
+     componentDidMount(){
+       
+          if(user.getUserUid()){
+               this.intiSacFeed();
+          }else{
+               console.log("Sacfeed: User not inti");
+          }
+     }
+
+     ionViewDidEnter() {
+          if(user.getUserUid()){
+               this.intiSacFeed();
+          }else{
+               console.log("Sacfeed: User not inti");
+          }
+     }
+
+     ionViewWillEnter() {
+          
+     }
+      
+        ionViewWillLeave() {
+     
+     }
+     
+        ionViewDidLeave() {
+         
+     }
+
+     render(){
+          return(
+          <div>
+                 <div className='app-space-feed-main-cont'>
+                    <DoubleHeader 
+                              priString="Spaces" 
+                              secString="Popular Spaces currenly we hear"  
+                              secStringVisi
+                    />
+
+                    <div className='app-space-feed-list-cont'>
+                         <div className='app-list-space-cont'>
+                         {this.renderSacDataFeed()}                 
+                         </div>
+                    </div>                         
+          </div>
+               
+          </div>    
+          )
+     }
+
+}
+
+const Sacfeeder = withIonLifeCycle(SacFeed)
+
+
+class Explore<ExploreProps> extends React.Component<ExploreProps,{
      userDataLoaded:boolean
      profileModalShow:boolean
      profileModalUid:string
@@ -217,6 +392,7 @@ export default class Explore<ExploreProps> extends React.Component<ExploreProps,
           }
           this.exploreClassInit = this.exploreClassInit.bind(this);
           this.setProfileModal = this.setProfileModal.bind(this);
+          this.doRefresh  = this.doRefresh.bind(this);
      }
 
      setProfileModal(val:boolean,uid?:string){
@@ -225,7 +401,7 @@ export default class Explore<ExploreProps> extends React.Component<ExploreProps,
 
      doRefresh(event: CustomEvent<RefresherEventDetail>) {
           console.log('Begin async operation');
-        
+          this.exploreClassInit(true);
           setTimeout(() => {
             console.log('Async operation has ended');
             event.detail.complete();
@@ -244,19 +420,26 @@ export default class Explore<ExploreProps> extends React.Component<ExploreProps,
           if(user.getUserUid())backendHelper = new BackendHelper(user.getUserUid()!);
           if(backendHelper){
                backendHelper._getUserInfo().then((res:any)=>{
-                    if(res.errBool!==true){
-                         user.setUserData(res.data);
-                         if(user.getUserData()?.init_bool===false){
-                             history.replace('/editprofile');
+                    if(res){
+                         
+                         if(res.errBool!==true){
+                              user.setUserData(res.data);
+                              if(user.getUserData()?.init_bool===false){
+                              history.replace('/editprofile');
+                              }
                          }
-                    }
+               }
                });
           }
      }
-     componentDidMount(){
+     
+
+
+     componentDidMount() {
           console.log("Explore: explore init uid"+user.getUserUid());
           this.exploreClassInit(false);
-     }
+        }
+
      render(){
           return(
                    <IonPage >
@@ -275,14 +458,16 @@ export default class Explore<ExploreProps> extends React.Component<ExploreProps,
                                    />
                                    <FeaturedSpaceSlider showModal={this.setProfileModal}/>
                                    <PopularCreator/>
-                                   <SpaceFeed showModal={this.setProfileModal}/>
+                                   <Sacfeeder showModal={this.setProfileModal}/>
                               </div>
                               <div className='app-content-fader-main-cont'/>
                                    
                               
                               </IonContent>        
                               <IonFab vertical="bottom" horizontal="end" slot="fixed" className='app-fab-main-butt'>
-                                   <IonFabButton className='app-fab-main-butt-butt'>
+                                   <IonFabButton className='app-fab-main-butt-butt' onClick={()=>{
+                                             history.push('/spacecreate');
+                                   }}>
                                         <IonImg src={Mic_UnSelec}></IonImg>
                                    </IonFabButton>
                               </IonFab>
@@ -291,3 +476,7 @@ export default class Explore<ExploreProps> extends React.Component<ExploreProps,
          );
      }
 }
+
+
+
+export default withIonLifeCycle(Explore);

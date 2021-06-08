@@ -1,5 +1,7 @@
 import firebase from "firebase/app";
 import "firebase/auth";
+import "firebase/database";
+
 import axios from 'axios';
 import FIREBASE_CONFIG_VAR from "../certs/firebase.config";
 import URLS from './api.routes'; 
@@ -32,8 +34,7 @@ declare  interface  firebaseHelperInter{
      initEmailAuth(eml:string,pass:string,callback:any):Promise<serverReponse|null>
      intiGoogleAuth():serverReponse|null
      getConnected():boolean|null
-     
-
+     getSpaceDetails():void
 }
 
 export type {serverReponse,firebaseHelperInter,errResponse};
@@ -68,6 +69,9 @@ export default class firebaseHelper implements firebaseHelperInter{
 
      }
      
+
+  
+
      initFirebaseApp(callback?:any): boolean | null {
           try{
                if(firebase.apps.length<1){
@@ -88,6 +92,26 @@ export default class firebaseHelper implements firebaseHelperInter{
                return false;
           }
      }
+
+     async getSpaceDetails(){
+          console.log("firebasehelper: space details init");
+          if(this.getFirebase()){
+               var database = this.getFirebase()!.database();
+               var spaceRef = database.ref('user_space_det');
+               return spaceRef;
+               // let resdata  = null;
+               // spaceRef.on('value', (snapshot) => {
+               // const data = snapshot.val();
+               // console.log("ASDSAD");
+               // });
+          }
+          else{
+               return null;
+          }
+         
+     }
+
+
      async checkInitUser(){
           let res = await checkToken();
           if( res &&  res!=='null'){
