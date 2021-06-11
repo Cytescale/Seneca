@@ -6,7 +6,7 @@ import { Link, Redirect, Route } from 'react-router-dom';
 import { StatusBar } from '@ionic-native/status-bar/ngx';
 import '../../../theme/styles/land.style.css';
 import React,{CSSProperties, useState} from 'react';
-import {CancelIco,profPlaceholder} from '../../../assets';
+import {CancelIco,profPlaceholder,headphones} from '../../../assets';
 import ban1 from '../../../assets/placeholders/ban1.jpg'
 import ban2 from '../../../assets/placeholders/ban2.jpg'
 import pep1 from '../../../assets/placeholders/pep1.jpg'
@@ -55,7 +55,13 @@ class space implements spaceInter{
      }
 }
 
-export let FeaturedSpace:React.FC<{data:spaceFeedInter,setProfileModal:any}> =(props)=>{
+export let FeaturedSpace:React.FC<{
+     data:spaceFeedInter,
+     setProfileModal:any,
+     setSpaceModal:any
+     setSid?:any,
+     sid?:any
+     }> =(props)=>{
      let [creat_name,setName] = useState(props.data.creator_name);          
           feedBackEndHelper!._getOtherUserInfo(props.data.suid!).then((ures:any)=>{
                     if(ures){
@@ -67,17 +73,16 @@ export let FeaturedSpace:React.FC<{data:spaceFeedInter,setProfileModal:any}> =(p
      let router = useIonRouter();
      return(
 
-          <div className='app-feat-space-main-cont' >
-                <div  className='ion-activatable ripple-parent'  onClick={()=>{
-                         router.push(`/space/${props.data.cuid}`,'root','push');
-                    }}>
-               <IonImg src={props.data.banner_art_src?props.data.banner_art_src:ban2} className='ion-activatable ripple-parent app-feat-space-ban-art'/>
+          <div className='app-feat-space-main-cont' onClick={()=>{
+               //router.push(`/space/${props.data.cuid}`,'root','push');
+               props.setSid(props.data.cuid);
+               props.setSpaceModal(true);
+          }}>
+                <div  className='ion-activatable ripple-parent'  >
+               <IonImg className='ion-activatable ripple-parent app-feat-space-ban-art'/>
                </div>
-               
-               <div className='app-feat-space-bottom-main-cont'>
-                    <div className='app-feat-space-bottom-name-main-cont'>
-                         <div className='app-feat-space-bottom-name-ava-main-cont'>
-                              <IonImg src={profPlaceholder} className='ion-activatable ripple-parent app-feat-space-left-pro-ico' 
+               <div className='app-feat-space-top-name-main-cont'>
+                               <IonImg src={profPlaceholder} className='ion-activatable ripple-parent app-feat-space-left-pro-ico' 
                               onClick={()=>{
                                    if(user.getUserUid() === props.data.suid){
                                         router.push('/land/profile','forward','push');
@@ -86,13 +91,19 @@ export let FeaturedSpace:React.FC<{data:spaceFeedInter,setProfileModal:any}> =(p
                                         props.setProfileModal(true,props.data.suid);
                                    }                                   
                               }}></IonImg>
-                         </div>
+                              <div className='app-feat-space-top-name-main-cont-name'>
+                                   {creat_name}  
+                              </div>
+                              <div className='app-feat-space-bottom-pro-count-cont'> <IonImg src={headphones} className='app-feat-space-head-pro-ico' /> {props.data.listners}</div>
+               </div>
+               <div className='app-feat-space-bottom-main-cont'>
+                    <div className='app-feat-space-bottom-name-main-cont'>
                          <div>
                               <div className='app-feat-space-bottom-name'>
                               {props.data.name}     
                               </div>
-                              <div className='app-feat-space-bottom-crea-name'>
-                              {creat_name}     
+                              <div className='app-feat-space-bottom-des'>
+                              {props.data.des}     
                               </div>
                          </div>
                     </div>
@@ -100,7 +111,7 @@ export let FeaturedSpace:React.FC<{data:spaceFeedInter,setProfileModal:any}> =(p
                          <div  className='app-feat-space-bottom-pro-cont'>
                          {/* <IonImg src={profPlaceholder} className='app-feat-space-bottom-pro-ico'></IonImg> */}
                          </div>
-                         <div className='app-feat-space-bottom-pro-count-cont'>{props.data.listners}</div>
+                        
                     </div>
                </div>
                {props.data.isLive===true?<div className='app-feat-live-indi-main-cont'>
@@ -113,13 +124,13 @@ export let FeaturedSpace:React.FC<{data:spaceFeedInter,setProfileModal:any}> =(p
      )
 }
 
-let  FeaturedSpaceSlider:React.FC<{showModal:any}>=(props:any)=>{
+let  FeaturedSpaceSlider:React.FC<{showModal:any,setSpaceModal:any}>=(props:any)=>{
      let data1 = new space("Placeholder Name","name",true,'CLvI6ewbCda1GbYBFpnjYG4clS03',ban2)
      return(
           <div>
                  <IonSlides pager={false} options={{initialSlide: 0,speed: 400}}>
                     <IonSlide>
-                    <FeaturedSpace data={data1} setProfileModal={props.showModal}/>
+                    <FeaturedSpace data={data1} setProfileModal={props.showModal} setSpaceModal={props.setSpaceModal} />
                     </IonSlide>
                </IonSlides>
                
@@ -185,25 +196,6 @@ let PopularCreator:React.FC<{}>=(props)=>{
 }
 
 
-let SpaceFeed:React.FC<{showModal:any}>=(props:any)=>{
-     let data1 = new space("Placeholder Name","name",true,'CvTBt6cgZCOwtKhQFgC3BdoIanS2',ban2)
-     return(
-          <div className='app-space-feed-main-cont'>
-                    <DoubleHeader 
-                              priString="Spaces" 
-                              secString="Popular Spaces currenly we hear"  
-                              secStringVisi
-                    />
-
-                    <div className='app-space-feed-list-cont'>
-                         <div className='app-list-space-cont'>
-                                   <FeaturedSpace data={data1} setProfileModal={props.showModal}/>
-                         </div>
-                    </div>                         
-          </div>
-     )
-}
-
 let ProfileView : React.FC<{showModal:boolean,suid:string,setShowModal:any}> = (props)=>{
      return(
           <IonModal
@@ -242,7 +234,7 @@ declare interface SacFeedStat {
 }
 
 
-class SacFeed extends React.Component<SacFeedInter,SacFeedStat>{
+class SacFeed extends React.Component<any,SacFeedStat>{
      constructor(props:SacFeedInter){
           super(props);
           this.state={
@@ -253,6 +245,7 @@ class SacFeed extends React.Component<SacFeedInter,SacFeedStat>{
           this.setInitSacfeed = this.setInitSacfeed.bind(this);
           this.renderSacFeed = this.renderSacFeed.bind(this);
           this.setParseData = this.setParseData.bind(this);
+          this.renderSacDataFeed = this.renderSacDataFeed.bind(this);
      }
 
      setParseData(val:any){
@@ -268,7 +261,13 @@ class SacFeed extends React.Component<SacFeedInter,SacFeedStat>{
      renderSacDataFeed(){
           let resa:any = [];
           this.state.feedParseData?.forEach((e,ind)=>{
-               resa.push(<FeaturedSpace data={e} setProfileModal={this.props.showModal}/>);
+               resa.push(<FeaturedSpace 
+                    data={e} 
+                    setProfileModal={this.props.showModal}
+                     setSpaceModal={this.props.setSpaceModal}
+                     setSid={this.props.setSid} 
+                     sid={this.props.sid}
+                     />);
           })
           return resa;
           }
@@ -378,7 +377,7 @@ class SacFeed extends React.Component<SacFeedInter,SacFeedStat>{
 const Sacfeeder = withIonLifeCycle(SacFeed)
 
 
-class Explore<ExploreProps> extends React.Component<ExploreProps,{
+class Explore extends React.Component<any,{
      userDataLoaded:boolean
      profileModalShow:boolean
      profileModalUid:string
@@ -451,14 +450,22 @@ class Explore<ExploreProps> extends React.Component<ExploreProps,{
                                    <div className='app-start-spacer'/>
                                    
                                    <WecomeHead shown/>
-                                   <DoubleHeader 
+                                   {/* <DoubleHeader 
                                    priString="Featured" 
                                    secString="Best spaces curated  by us"  
                                    secStringVisi
                                    />
-                                   <FeaturedSpaceSlider showModal={this.setProfileModal}/>
-                                   <PopularCreator/>
-                                   <Sacfeeder showModal={this.setProfileModal}/>
+                                   <FeaturedSpaceSlider 
+                                        showModal={this.setProfileModal}
+                                         setSpaceModal={this.props.setSpaceModal}
+                                   /> */}
+                                   {/* <PopularCreator/> */}
+                                   <Sacfeeder 
+                                   showModal={this.setProfileModal} 
+                                   setSpaceModal={this.props.setSpaceModal}
+                                   setSid={this.props.setSid} 
+                                   sid={this.props.sid}
+                                   />
                               </div>
                               <div className='app-content-fader-main-cont'/>
                                    

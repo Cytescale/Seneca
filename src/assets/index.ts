@@ -16,6 +16,9 @@ import Share from './svg/share.svg';
 import Fronthand from './svg/front_hand.svg';
 import Send from './svg/send.svg';
 import downArrow from './svg/down-arrow.svg';
+import Group from './svg/group.svg';
+import stream from './svg/stream.svg';
+import headphones from './svg/headphones.svg';
 import Profile_placeholder from './png/profile_placeholder.png';
 const  profPlaceholder = "https://gravatar.com/avatar/dba6bae8c566f9d4041fb9cd9ada7741?d=identicon&f=y";
 export {CancelIco,
@@ -32,10 +35,13 @@ export {CancelIco,
      Call_end,
      Person_add,
      Share,
+     stream,
      Fronthand,
      Send,
+     headphones,
      Profile_placeholder,
      profPlaceholder,
      downArrow,
+     Group,
      Mic_Mute_UnSelec
 }; 

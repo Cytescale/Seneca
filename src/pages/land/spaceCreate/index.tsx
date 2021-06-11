@@ -166,7 +166,7 @@ export default class SpaceCreate<spaceCreateInter> extends React.Component<space
                        if(res){
                             if(res.errBool===false){
                                  if(res.data.creation_bool===true){
-                                   history.replace('/space/'+res.data.key)
+                                   history.replace('/')
                                  }else{
                                         this.setToast(true,"Creation failed");
                                  }

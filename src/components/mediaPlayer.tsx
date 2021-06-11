@@ -1,6 +1,7 @@
 import {IonSearchbar,IonContent, IonToast,IonModal,IonHeader,withIonLifeCycle,IonPage,IonToolbar,IonTitle,IonButtons,IonIcon,IonButton,IonBackButton,IonRouterOutlet,IonTabBar,IonTabButton,IonImg,IonTabs } from '@ionic/react';
 import AgoraRTC, { ILocalVideoTrack, IRemoteVideoTrack, ILocalAudioTrack, IRemoteAudioTrack, IMicrophoneAudioTrack, IAgoraRTCClient, IAgoraRTCRemoteUser, ClientRole } from "agora-rtc-sdk-ng";
 import React, { useRef, useEffect } from "react";
+import firebaseHelper from '../api/firebaseHelper';
 import {
   Call_end,
   Person_add,
@@ -9,7 +10,14 @@ import {
   Fronthand,
   Send,
   Mic_Mute_UnSelec,
+  
 } from '../assets/';
+import User from './user';
+
+
+let user  =  new User();
+let FirebaseHelper:firebaseHelper|null = new firebaseHelper();
+
 const RTC_OPTIONS={
   mode:'live',
   codec:'vp8',
@@ -27,7 +35,12 @@ export declare interface MediaPlayerProps {
   mic:boolean
   channelToken?:string
   spaceData:any
+  SID:string
   UID?:string
+  joined:boolean
+  setJoined:any
+  joinedName:string
+  setJoinedName:any
 }
 
 export declare interface MediaPlayerState {
@@ -44,18 +57,17 @@ export declare interface MediaPlayerState {
 }
 
 
-
-const ChatInpCont:React.FC<{mic:boolean,setMicState:any,setToast:any}> = (props:any) => {
+const ChatInpCont:React.FC<{mic:boolean,setMicState:any,setToast:any,closeCall:any}> = (props:any) => {
   return(
        <div className='app-chat-inp-main-cont' >
                  <div className='app-chat-inp-butt-cont'>
                  {props.mic===true?
-                 <button className='app-chat-inp-butt' onClick={()=>{
-                      props.setMicState(false);
-                      props.setToast(true,"Mic Unmuted")
-                 }}>
-                      <IonImg src={Mic_Mute_UnSelec} className='app-chat-inp-butt-ico'></IonImg>
-                 </button>:
+                        <button className='app-chat-inp-butt' onClick={()=>{
+                              props.setMicState(false);
+                              props.setToast(true,"Mic Unmuted")
+                        }}>
+                              <IonImg src={Mic_Mute_UnSelec} className='app-chat-inp-butt-ico'></IonImg>
+                        </button>:
                  <button className='app-chat-inp-butt' onClick={()=>{
                       props.setMicState(true);
                       props.setToast(true,"Mic muted");
@@ -65,23 +77,24 @@ const ChatInpCont:React.FC<{mic:boolean,setMicState:any,setToast:any}> = (props:
                  }
                  
                  </div>
-                 <input type='text' placeholder='Whats on mind?'  className='app-chat-inp-fld'/>
-                 
-                 <div className='app-chat-inp-butt-cont send-butt-cont'>
-                 <button className='app-chat-inp-butt'>
-                      <IonImg src={Send} className='app-chat-inp-butt-ico'></IonImg>
-                 </button>
-                 </div>
                  <div className='app-chat-inp-butt-cont'>
                  <button className='app-chat-inp-butt'>
-                      <IonImg src={Fronthand} className='app-chat-inp-butt-ico'></IonImg>
+                      <IonImg src={Person_add} className='app-chat-inp-butt-ico'></IonImg>
                  </button>
                  </div>
+                 <div className='app-chat-inp-butt-cont send-butt-cont'>
+                 <button className='app-chat-inp-but-end' onClick={()=>{
+                    props.closeCall();
+                 }}>
+                      Leave <IonImg src={Call_end} className='app-chat-inp-butt-ico space-end-ico'></IonImg>
+                 </button>
+                 </div>
+              
        </div>
   )
 }
 
-class agoraPlayer extends React.Component<MediaPlayerProps,MediaPlayerState>{
+class agoraPlayer extends React.Component<MediaPlayerProps|any,MediaPlayerState>{
   constructor(props:MediaPlayerProps){
     super(props);
     this.state={
@@ -111,7 +124,54 @@ class agoraPlayer extends React.Component<MediaPlayerProps,MediaPlayerState>{
     this.setToast = this.setToast.bind(this);
     this._setAsMic = this._setAsMic.bind(this);
     this.setMicState = this.setMicState.bind(this);
+    this.setMic = this.setMic.bind(this);
   }
+
+
+  setMic(bool:boolean){
+    if(FirebaseHelper?.getFirebase()){
+      console.log("agoraHelper: attendee add init");
+      var database = FirebaseHelper?.getFirebase()!.database();
+      var spaceRef = database.ref('user_curr_stat').child(user.getUserUid()!).update({speaking:bool});
+    }
+  }
+
+
+  addAsAttendee(){
+    let data =this.props.spaceData ;
+    if(FirebaseHelper?.getFirebase()){
+         console.log("agoraHelper: attendee add init");
+         var database = FirebaseHelper?.getFirebase()!.database();
+         var spaceRef = database.ref('user_curr_stat').child(user.getUserUid()!).set({
+            speaking:false,
+            currentListing:this.props.SID,
+         });
+
+    }
+}
+removeAsAttendee(){
+  let data = this.props.spaceData;
+    if(FirebaseHelper?.getFirebase()){
+         console.log("agoraHelper: attendee remove init");
+         var database = FirebaseHelper?.getFirebase()!.database();
+         var spaceRef = database.ref('user_curr_stat').child(user.getUserUid()!).set({
+          speaking:false,
+          currentListing:null,
+         });
+    }
+}
+removeAsAttendeeWithUid(uid:string){
+  let data = this.props.spaceData;
+    if(FirebaseHelper?.getFirebase()){
+         console.log("agoraHelper: attendee remove init");
+         var database = FirebaseHelper?.getFirebase()!.database();
+         var spaceRef = database.ref('user_curr_stat').child(uid).set({
+          speaking:false,
+          currentListing:null,
+         });
+    }
+}
+
 
 
   setMicState(v:boolean){
@@ -154,6 +214,21 @@ async eventHandlers(){
   if(AGORA_CLIENT!){   
     console.log("Duration"+AGORA_CLIENT!.getRTCStats().Duration);;
     console.log("agoraHelper: connection stats"+AGORA_CLIENT!.connectionState)
+
+    AGORA_CLIENT!.on("volume-indicator", volumes => {
+      volumes.forEach((volume, index) => {
+        if(volume.uid === this.props.UID){
+          if(volume.level>2){
+            this.setMic(true);
+          }
+          else{
+            this.setMic(false);
+          }
+          
+        }
+        
+      });
+    })
 
     AGORA_CLIENT!.on("error", (err:any) => {
     console.log("agoraHelper:" +err)
@@ -203,6 +278,10 @@ async eventHandlers(){
         this.props.spaceData.agora_channel_token,
         null,
         );
+        if(JOINED_CLIENT_SID){
+          this.addAsAttendee();
+        }
+        AGORA_CLIENT!.enableAudioVolumeIndicator();
         this.setChannelUid(JOINED_CLIENT_SID!);
         this._publicandplayAudioTrack();
           if(this.props.UID === 'CvTBt6cgZCOwtKhQFgC3BdoIanS2'){
@@ -230,24 +309,24 @@ async eventHandlers(){
     const LOCAL_AUDIO_TRACK = await AgoraRTC.createMicrophoneAudioTrack({
          encoderConfig: "speech_low_quality",
     });
-    this.setLocalTrack(LOCAL_AUDIO_TRACK);
+    
+  
     if(this.state.mic===true){
-      this.state.LOCAL_TRACK!.setEnabled(true).then(async ()=>{
+      LOCAL_AUDIO_TRACK.setEnabled(true).then(async ()=>{
           await AGORA_CLIENT!.publish([this.state.LOCAL_TRACK!]);
       });  
-      console.log("agoraHelper: Audio track umuted");
+      console.log("agoraHelper: Audio track umuted");   
     }
     else{
       console.log("agoraHelper: Audio track muted");
-      this.state.LOCAL_TRACK!.setEnabled(false);  
-      //await AGORA_CLIENT!.publish([this.state.LOCAL_TRACK!]);
+      LOCAL_AUDIO_TRACK.setEnabled(false);  
     }
-    this.state.LOCAL_TRACK!.play();
+    this.setLocalTrack(LOCAL_AUDIO_TRACK);
+    //this.state.LOCAL_TRACK!.play();
 }
 
 async _setAsMic(){
   if(this.state.LOCAL_TRACK){
-    if(this.state.LOCAL_TRACK!.isPlaying){
       if(this.state.mic===true){
         this.state.LOCAL_TRACK!.setEnabled(true).then(async ()=>{
           await AGORA_CLIENT!.publish([this.state.LOCAL_TRACK!]);
@@ -259,14 +338,13 @@ async _setAsMic(){
         this.state.LOCAL_TRACK!.setEnabled(false);  
         //await AGORA_CLIENT!.publish([this.state.LOCAL_TRACK!]);
       }
-    }
   }
 }
 
 
   async leaveCall(){
     console.log("agoraHelper:  Audio track destroyed init");
-    if(this.state.LOCAL_TRACK){
+     if(this.state.LOCAL_TRACK){
       this.state.LOCAL_TRACK.close();
          await AGORA_CLIENT!.leave();
           this.setChannelUid(null);
@@ -278,21 +356,28 @@ async _setAsMic(){
           this.setChannelUid(null);
          console.log("agoraHelper:  Audio remote track destroyed");
     }
+    this.removeAsAttendee();
+    this.props.setJoined(false);
+    this.props.setModal(false);
+    this.props.setSid(null);
+    this.props.setJoinedName(null)
   }
 
   componentDidMount(){
-    this.initAgoraClient();
+    this.props.setJoined(true);
+    this.props.setJoinedName(this.props.spaceData.name)
+   // this.initAgoraClient();
   }
   componentDidUpdate(){
    // console.log("agoraHelper: Mic status change"+this.state.mic);
   }
   componentWillUnmount(){
-    this.leaveCall();
+    //this.leaveCall();
   }
   render(){
     return(
       <div>
-                <ChatInpCont mic={this.state.mic} setMicState={this.setMicState} setToast={this.setToast} /> 
+                <ChatInpCont mic={this.state.mic} setMicState={this.setMicState} setToast={this.setToast} closeCall={this.leaveCall}/> 
                   <IonToast
                     isOpen={this.state.toastBool}
                     onDidDismiss={() => this.setToast(false,"null")}

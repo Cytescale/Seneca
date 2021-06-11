@@ -7,7 +7,7 @@ import {userData} from '../components/user';
 
 export default class BackendHelper{
      UID :string|null = null;
-     constructor(UID:string){
+     constructor(UID:string|null){
           this.UID = UID!;
      }
      

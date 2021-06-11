@@ -12,6 +12,10 @@ import {
      Fronthand,
      Send,
      Mic_Mute_UnSelec,
+     profPlaceholder,
+     downArrow,
+     Group,
+     headphones,
 } from '../../../assets/';
 import AgoraPlayer from '../../../components/mediaPlayer';
 import ban1 from '../../../assets/placeholders/ban1.jpg'
@@ -22,6 +26,10 @@ import pep3 from '../../../assets/placeholders/pep3.jpg'
 import pep4 from '../../../assets/placeholders/pep4.jpg'
 import history from '../../history';
 import User from '../../../components/user';
+import BackendHelper from '../../../api/backendHelper';
+
+let backendHelper:BackendHelper|null = new BackendHelper(null);
+
 let user  =  new User();
 let FirebaseHelper:firebaseHelper|null = new firebaseHelper();
 
@@ -39,22 +47,45 @@ const SpeakersCont:React.FC<{name:string,proPic:string,isLive?:boolean}> = (prop
           </div>
      )
 }
-const BannerCont:React.FC<{}>=(props)=>{
+
+function isLive(uid:any,attndData:Array<any>):boolean{
+     let res = false;
+     if(attndData){
+     attndData.forEach((e)=>{
+          console.log(`space: speaking${e.speaking} uid${e.uid}`)
+          if(e.speaking===true && e.uid===uid){
+               res = true;
+               return;
+          }
+     })
+     }
+     return res;
+}
+
+
+const BannerCont:React.FC<any> = (props:any)=>{
+     let usrRender:any = [];
+     if(props.attndUserData){
+          props.attndUserData.forEach((e:any)=> {
+               usrRender.push(
+                    <SpeakersCont name={e.dname} proPic={profPlaceholder} isLive={isLive(e.UID,props.attndData)} />
+               )
+          });
+     }
      return(
           <div className='app-space-banner-main-cont'>
-               <IonImg src={ban2} className='app-space-banner-img'/>
+               <IonImg className='app-space-banner-img'/>
                <div className='app-space-banner-bottom-main-cont'>
-                    <SpeakersCont name='alvin' proPic={pep1} isLive={true} />
+                   {usrRender}
                </div>
           </div>
      )
 }
 const TotalListners:React.FC<{count:number}> = (props) =>{
      return(
-          <div className='app-total-listners-main-cont' id='listnr-cont'>
-               
+          <div className='app-total-listners-main-cont' id='listnr-cont'> 
                <div className='app-total-listners-count'>
-                   <div className='app-total-listners-count-ecp' />{props.count} Listners
+               <div className='app-feat-space-bottom-pro-count-cont space-list-cont'> <IonImg src={headphones} className='app-feat-space-head-pro-ico' /> {props.count} Joined</div>
                </div>
           </div>
      )
@@ -142,6 +173,7 @@ const ChatCont:React.FC<{}> = (props) =>{
 }
 
  class Space extends React.Component<any,any>{
+     userDataArray:Array<any> = [];
      constructor(props:SpaceProps){
           super(props);
           this.state={
@@ -149,8 +181,11 @@ const ChatCont:React.FC<{}> = (props) =>{
                toastBool:false,
                spaceDataLoading:true,
                spaceDataLoaded:false,
+               spaceAttndData:null,
+               spaceAttndUserData:null,
                toastStr:"null",
                spaceData:null,
+            
           }
           this.setMicState = this.setMicState.bind(this);
           this.setToast = this.setToast.bind(this);
@@ -159,15 +194,32 @@ const ChatCont:React.FC<{}> = (props) =>{
           this.setSpaceData = this.setSpaceData.bind(this);
           this.initSpaceData = this.initSpaceData.bind(this);
           this.setExtractedData = this.setExtractedData.bind(this);
+          this.initSpaceUserData  = this.initSpaceUserData.bind(this);
+          this.setspaceAttndData = this.setspaceAttndData.bind(this);
+          //this.props.match.params.sid)
+     }    
+
+     getUserDataArray(){
+          this.userDataArray  = [];
+          
+
      }
 
-     
+
   setToast(bool:boolean,str:string){
      this.setState({
           toastBool:bool,
           toastStr:str
      })
  }
+
+     setspaceAttndUserData(data:any){
+          this.setState({spaceAttndUserData:data});
+     }
+
+     setspaceAttndData(data:any){
+          this.setState({spaceAttndData:data})
+     }
 
      setSpaceData(data:any){
           this.setState({spaceData:data});
@@ -188,6 +240,47 @@ const ChatCont:React.FC<{}> = (props) =>{
           this.setspaceDataLoaded(true);
           console.log(data);
           console.log("DATA LOADED BOOl"+this.state.spaceDataLoaded);    
+         
+     }
+     async setListnerData(data:any){
+          let fd:Array<any> = [];
+          let userData:Array<any>=[];
+          for (const gd in data) {
+               let op = data[gd];
+               if(op){
+                    if(op.currentListing){
+                         if(op.currentListing ===this.props.sid){
+                              op.uid = gd;
+                              fd.push(op);
+                              let res:any = await backendHelper!._getOtherUserInfo(gd);
+                              if(res.errBool===false){
+                                   userData.push(res.data);
+                              }
+                         }         
+                    }
+               }
+          }
+          return ({fd,userData});
+     }
+
+
+     async initSpaceUserData(){
+          if(FirebaseHelper?.getFirebase()){
+               console.log("INITs");
+               var database = FirebaseHelper?.getFirebase()!.database();
+               var spaceRef = database.ref('user_curr_stat');
+               spaceRef.on('value', (snapshot:any) => {
+               const data = snapshot.val();
+                    if(data){this.setListnerData(data).then(res=>{
+                         this.setspaceAttndData(res.fd);
+                         this.setspaceAttndUserData(res.userData);
+                    })}  
+               });
+             
+          }
+          else{
+               return null;
+          }
      }
 
 
@@ -195,17 +288,18 @@ const ChatCont:React.FC<{}> = (props) =>{
           if(FirebaseHelper?.getFirebase()){
                console.log("INITs");
                var database = FirebaseHelper?.getFirebase()!.database();
-               var spaceRef = database.ref('user_space_det').child(this.props.match.params.sid);
+               var spaceRef = database.ref('user_space_det').child(this.props.sid);
                let resdata  = null;
                spaceRef.on('value', (snapshot:any) => {
                const data = snapshot.val();
-                    if(data){this.setExtractedData(data);}          
+                    if(data){this.setExtractedData(data);}  
                });
+             
           }
           else{
                return null;
           }
-          }
+     }
 
 
      componentDidUpdate(){
@@ -218,9 +312,11 @@ const ChatCont:React.FC<{}> = (props) =>{
   
      componentDidMount(){
           console.log("Space: init ");
-          console.log(this.props.match.params.sid);
-          if(this.props.match.params.sid){
-               this.initSpaceData();
+          console.log(this.props.sid);
+          if(this.props.sid){
+               this.initSpaceData().then(()=>{
+                    this.initSpaceUserData();
+               });
           }
         
      }
@@ -229,7 +325,7 @@ const ChatCont:React.FC<{}> = (props) =>{
 
      ionViewWillEnter() {
           
-          if(this.props.match.params.sid==='undefined' || !user.getUserUid()){
+          if(this.props.sid==='undefined' || !user.getUserUid()){
             
                history.replace('/land');
           }
@@ -239,47 +335,83 @@ const ChatCont:React.FC<{}> = (props) =>{
      
           }
      componentWillUnmount(){
+          console.log("space: unmount");
      }
      
      ionViewDidLeave() {
           console.log("Space: Left");
      }
+     
+     renderProfileWind(name:any,){
+          return(
+               <div  className='app-chat-attnd-card'>
+                         <div className='app-chat-attnd-card-outer-cont'>
+                              <div  className='app-chat-attnd-card-ico-outer-cont'>
+                                   <div className='app-chat-attnd-card-ico-cont'>
+                                   <IonImg src={profPlaceholder} className='app-chat-attnd-card-ico'/>
+                                   </div>
+                              </div>
+                         <div  className='app-chat-attnd-card-name'>{name}</div>
+                         </div>
+               </div>         
+          )
+     }
+
+     renderAttende(){
+          return(
+               <div className='app-chat-attnd-main-cont'>
+                    {this.renderProfileWind("Nameeeee")}
+                    {this.renderProfileWind("Nameeeeee")}
+                    {this.renderProfileWind("Nameeeee")}
+                    {this.renderProfileWind("eeeeeee")}
+                    {this.renderProfileWind("Nameeeeeeee")}
+                    {this.renderProfileWind("Nameeeeeeee")}
+                    {this.renderProfileWind("eeeeeee")}
+                    {this.renderProfileWind("Nameeeeeeee")}
+                    {this.renderProfileWind("Nameeeeeeee")}
+               </div>
+          )
+     }
+
      render(){
           return(
                <IonPage >
                <div className='space-content'>
                <IonToolbar className='app-space-toolbar-main-cont'>
-               <IonButtons slot="start">
-                    <IonBackButton defaultHref="/land" />
-               </IonButtons>
-               <IonButtons slot="end" className='app-toolbar-end-butt-cont' >
-                    <div className='app-toolbar-end-outer-butt'>
-                    <IonButton className='app-toolbar-end-butt' >
-                    <IonImg src={Person_add} className='app-toolbar-tit-more-ico' />
-                    </IonButton>
-                    </div>
-                    <div className='app-toolbar-end-outer-butt'>
-                    <IonButton className='app-toolbar-end-butt' >
-                    <IonImg src={Share} className='app-toolbar-tit-more-ico' />
-                    </IonButton>
-                    </div>
-                    <div className='app-toolbar-end-outer-butt'>
-                    <IonButton className='app-toolbar-end-butt' >
-                    <IonImg src={Call_end} className='app-toolbar-tit-more-ico' />
-                    </IonButton>
-                    </div>
-               </IonButtons>
-               </IonToolbar>
-                    <BannerCont />
-                    <div className='app-space-name-main-cont'>
-                         {
+                    <IonButtons slot="start">
+               <div className='app-chat-inp-butt-cont'>
+                 <button className='space-head-butt' onClick={()=>{
+                      this.props.setModal(false);
+                 }}>
+                      <IonImg src={downArrow} className='app-chat-inp-butt-ico space-head-butt-ico'></IonImg>
+                 </button>
+                 </div> 
+                 </IonButtons>
+                 <IonButtons slot="end">
+               
+                    <div className='app-chat-inp-butt-cont'>
+                 
+                 <button className='space-head-butt'>
+                      <IonImg src={Group} className='app-chat-inp-butt-ico space-head-butt-ico'></IonImg>
+                 </button>
+                 </div> 
+                 </IonButtons>
+                 {
                               this.state.spaceDataLoaded===true?
-                              this.state.spaceData.name:
+                              <IonTitle className='app-space-tit-cont'>{this.state.spaceData.name}                            
+                              </IonTitle>:
                               null
-                         }
+               }
+               </IonToolbar>
+                    <BannerCont attndUserData={this.state.spaceAttndUserData} attndData={this.state.spaceAttndData} />
+                    <div className='app-space-name-main-cont'>
+                      
                     </div>
-                    <TotalListners count={0}/>
-                    <ChatCont />
+                    <TotalListners count={this.state.spaceAttndData?this.state.spaceAttndData.length:0}/>
+                    <div className='app-chat-attnd-main-outer-cont'>
+                    {this.renderAttende()}
+                    </div>
+                    {/* <ChatCont /> */}
                   <IonToast
                     isOpen={this.state.toastBool}
                     onDidDismiss={() => this.setToast(false,"null")}
@@ -289,12 +421,14 @@ const ChatCont:React.FC<{}> = (props) =>{
                     {
                     this.state.spaceDataLoaded===true?
                     <AgoraPlayer 
+                    {...this.props}
                     joinable={true}
+                    SID={this.props.sid}
                     spaceData={this.state.spaceData}
                     mic={!this.state.mic_mute}
                     role='host' 
                     UID={user.getUserUid()!}
-                    channelToken={this.props.match.params.sid}  />:
+                    channelToken={this.props.sid}  />:
                     <span></span>
                     }
 
