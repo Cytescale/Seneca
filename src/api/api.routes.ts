@@ -1,8 +1,8 @@
 let _BASE_API_URL = process.env.PUBLIC_API_HOST
 if(process.env.NODE_ENV=='development'){
-     _BASE_API_URL = 'https://titan-alpha.vercel.app/api'
+     _BASE_API_URL = 'https://titan-alpha.vercel.app/api/'
 }
-_BASE_API_URL = 'https://titan-alpha.vercel.app/api'
+_BASE_API_URL = 'https://titan-alpha.vercel.app/api/'
 
 
 type URLinter = {
