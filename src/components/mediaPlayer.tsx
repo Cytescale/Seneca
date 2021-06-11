@@ -366,7 +366,7 @@ async _setAsMic(){
   componentDidMount(){
     this.props.setJoined(true);
     this.props.setJoinedName(this.props.spaceData.name)
-   // this.initAgoraClient();
+    this.initAgoraClient();
   }
   componentDidUpdate(){
    // console.log("agoraHelper: Mic status change"+this.state.mic);

@@ -124,7 +124,6 @@ const LandBase:React.FC<{isAuth:boolean,setAuth:any}> = (props)=>{
                      <IonModal
                          isOpen={showSpaceModal}
                          cssClass='app-modal-main-cont'
-                         swipeToClose={true}
                          onDidDismiss={() => setSpaceModal(false)}>
                          <Space 
                              setModal={setSpaceModal} 
