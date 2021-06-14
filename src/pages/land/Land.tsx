@@ -94,10 +94,7 @@ const CurrentPlayingSpace:React.FC<any> = (props:any)=>{
                props.setModal(true);
           }}>
                     <IonImg src={stream } className='app-curr-play-main-cont-ico' />  
-                    <div className='app-curr-play-main-cont-tit'>Placeholder space name</div>
-                 {/* <button className='app-curr-play-main-cont-but-end'>
-                    <IonImg src={Call_end} className='app-curr-play-main-cont-but-end-ico'></IonImg>
-                 </button> */}
+                    <div className='app-curr-play-main-cont-tit'>Joined {props.name}</div>
           </div>
      )
 }
@@ -112,7 +109,7 @@ const LandBase:React.FC<{isAuth:boolean,setAuth:any}> = (props)=>{
           <IonApp>
           <IonReactRouter>
          <IonPage id="main">
-         {joined?<CurrentPlayingSpace setModal={setSpaceModal} />:null}             
+         {joined?<CurrentPlayingSpace setModal={setSpaceModal} name={joinedName}/>:null}             
          <IonContent fullscreen className='app-content-main-cont'>
                      <TabCont 
                      isAuth={props.isAuth} 

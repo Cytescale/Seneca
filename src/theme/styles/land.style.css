@@ -122,48 +122,89 @@
 
 .app-feat-space-top-name-main-cont{
      width: 100%;
-     height: 42px;
+     height: auto;
      position: absolute;
      top: 0;
      left: 0;
      right: 0;
-     display: inline-flex;
-     align-items: center;
      color: #fff;
      padding: 13px;
-     padding-top: 7px;
+     padding-top: 3px;
      padding-bottom: 7px;
      
 }
+.app-feat-space-top-name-main-inner-cont{
+     height: 42px;
+     display: inline-flex;
+     align-items: center;
+}
+.app-feat-space-atnd-main-cont{
+     height: 42px;
+     width: 100%;
+     display:inline-flex;
+}
+.app-atnd-ico-cont{
+     width: 26px;
+     height: 26px;
+     font-size: 14px;
+     margin-right:-7px;
+     display: flex;
+     justify-content: center;
+     align-items: center;
+     background-color:var(--env-color-s3);
+     border-radius: 100px;
+     border: 1px solid #fff;
+}
+
+
 
 .app-feat-space-bottom-main-cont{
-     height: 92px;
+     height: auto;
      width: 100%;
      position: absolute;
      bottom: -1px;
-     padding: 13px;
+     padding:8px;
      /* background: linear-gradient(180deg, rgba(255, 255, 255, 0) 0%, rgba(0, 0, 0, 0.21) 34.9%, rgba(0, 0, 0, 0.56) 61.46%, rgba(0, 0, 0, 1) 100%); */
 }
 .app-feat-space-bottom-name-cont{
      float: left;
      
 }
-.app-feat-space-bottom-name-main-cont{
-     position: absolute;
-     display: inline-flex;
+
+.app-feat-space-bottom-connc-bar{
+     width: 100%;
      bottom: 0;
-     left: 0;
+     height: 22px;
+     text-align: center;
+     display: flex;
+     justify-content: center;
+     align-items: center;
+     margin-bottom: 0px;
+     border-radius: 10px;
+     font-size: 10px;
+     font-weight: 700;
+     background-color: #82FF70;
+}
+
+.app-feat-space-bottom-name-main-cont{
+   
+     display: inline-flex;
+
      padding: 12px;
      text-align: left;
 }
 .app-feat-space-left-pro-ico{
      width: 18px;
      height: 18px;
-     object-fit: cover;
+     object-fit: fill;
      font-family: sen;
      font-weight: 700;
      border-radius: 320px;
      overflow: hidden;
+}
+.atnd-pro-pic{
+     width: 26px;
+     height: 26px;
 }
 
 .app-feat-space-head-pro-ico{

@@ -3,12 +3,13 @@ if(process.env.NODE_ENV=='development'){
      _BASE_API_URL = 'http://172.20.10.6:3000/api/'
 }
 if(process.env.NODE_ENV=='production'){
-     _BASE_API_URL = 'https://titan-git-dev-cytescale.vercel.app/api/'
+     _BASE_API_URL = 'https://titan-alpha.vercel.app/api/'
 }
 
 type URLinter = {
      backendInit:string
      getUserInfo: string
+     getUserByJoiningId:string
      getFollowBool:string
      addFollow:string
      delFollow:string
@@ -19,6 +20,7 @@ type URLinter = {
 }
 const URLS:URLinter = {
      getUserInfo:_BASE_API_URL+'db/getUser',
+     getUserByJoiningId:_BASE_API_URL+'db/getUserJoiningId',
      imagekitAuth:_BASE_API_URL+"cdn/imageKitAuth",
      updateUserInfo:_BASE_API_URL+"db/updateUser",
      getFollowBool:_BASE_API_URL+"db/getFollow",

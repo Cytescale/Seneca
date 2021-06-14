@@ -27,7 +27,7 @@ const RTC_OPTIONS={
   token: '006d95380ef73954640840d0b042d9e128dIACwNb6QISGxvPK6JgsoNO/B6OGzNqIfnPYxC87q2tS1ggx+f9gAAAAAEADGEkMQB9HAYAEAAQAG0cBg',
 }
 
-var AGORA_CLIENT:IAgoraRTCClient|null = null;
+
 
 export declare interface MediaPlayerProps {
   joinable:boolean
@@ -95,6 +95,7 @@ const ChatInpCont:React.FC<{mic:boolean,setMicState:any,setToast:any,closeCall:a
 }
 
 class agoraPlayer extends React.Component<MediaPlayerProps|any,MediaPlayerState>{
+  public static AGORA_CLIENT:IAgoraRTCClient|null = null;
   constructor(props:MediaPlayerProps){
     super(props);
     this.state={
@@ -130,7 +131,7 @@ class agoraPlayer extends React.Component<MediaPlayerProps|any,MediaPlayerState>
 
   setMic(bool:boolean){
     if(FirebaseHelper?.getFirebase()){
-      console.log("agoraHelper: attendee add init");
+      console.log("agoraPlayer: attendee add init");
       var database = FirebaseHelper?.getFirebase()!.database();
       var spaceRef = database.ref('user_curr_stat').child(user.getUserUid()!).update({speaking:bool});
     }
@@ -140,7 +141,7 @@ class agoraPlayer extends React.Component<MediaPlayerProps|any,MediaPlayerState>
   addAsAttendee(){
     let data =this.props.spaceData ;
     if(FirebaseHelper?.getFirebase()){
-         console.log("agoraHelper: attendee add init");
+         console.log("agoraPlayer: attendee add init");
          var database = FirebaseHelper?.getFirebase()!.database();
          var spaceRef = database.ref('user_curr_stat').child(user.getUserUid()!).set({
             speaking:false,
@@ -152,7 +153,7 @@ class agoraPlayer extends React.Component<MediaPlayerProps|any,MediaPlayerState>
 removeAsAttendee(){
   let data = this.props.spaceData;
     if(FirebaseHelper?.getFirebase()){
-         console.log("agoraHelper: attendee remove init");
+         console.log("agoraPlayer: attendee remove init");
          var database = FirebaseHelper?.getFirebase()!.database();
          var spaceRef = database.ref('user_curr_stat').child(user.getUserUid()!).set({
           speaking:false,
@@ -163,7 +164,7 @@ removeAsAttendee(){
 removeAsAttendeeWithUid(uid:string){
   let data = this.props.spaceData;
     if(FirebaseHelper?.getFirebase()){
-         console.log("agoraHelper: attendee remove init");
+         console.log("agoraPlayer: attendee remove init");
          var database = FirebaseHelper?.getFirebase()!.database();
          var spaceRef = database.ref('user_curr_stat').child(uid).set({
           speaking:false,
@@ -186,13 +187,13 @@ removeAsAttendeeWithUid(uid:string){
     })
 }
   
- setAgoraClient(v : IAgoraRTCClient) {
+ setAgoraClient(v : IAgoraRTCClient|null) {
     this.setState({AGORA_CLIENT:v});
   }
- setLocalTrack(v : IMicrophoneAudioTrack) {
+ setLocalTrack(v : IMicrophoneAudioTrack|null) {
     this.setState({LOCAL_TRACK:v});
   }
- setRemoteTrack(v : IRemoteAudioTrack) {
+ setRemoteTrack(v : IRemoteAudioTrack|null) {
     this.setState({REMOTE_TRACK:v});
   }
  setChannelUid(v : string|number|null) {
@@ -209,13 +210,13 @@ removeAsAttendeeWithUid(uid:string){
   }
   
   
-async eventHandlers(){
-  console.log("agoraHelper: event handelers created" );
-  if(AGORA_CLIENT!){   
-    console.log("Duration"+AGORA_CLIENT!.getRTCStats().Duration);;
-    console.log("agoraHelper: connection stats"+AGORA_CLIENT!.connectionState)
+ eventHandlers(){
+  console.log("agoraPlayer: event handelers created" );
+  if(agoraPlayer.AGORA_CLIENT!){   
+    console.log("Duration"+agoraPlayer.AGORA_CLIENT!.getRTCStats().Duration);;
+    console.log("agoraPlayer: connection stats"+agoraPlayer.AGORA_CLIENT!.connectionState)
 
-    AGORA_CLIENT!.on("volume-indicator", volumes => {
+    agoraPlayer.AGORA_CLIENT!.on("volume-indicator", volumes => {
       volumes.forEach((volume, index) => {
         if(volume.uid === this.props.UID){
           if(volume.level>2){
@@ -230,78 +231,75 @@ async eventHandlers(){
       });
     })
 
-    AGORA_CLIENT!.on("error", (err:any) => {
-    console.log("agoraHelper:" +err)
+    agoraPlayer.AGORA_CLIENT!.on("error", (err:any) => {
+    console.log("agoraPlayer:" +err)
     })
 
-    AGORA_CLIENT!.on("user-joined",(user: IAgoraRTCRemoteUser)=>{
-      console.log("agoraHelper: user joined" +user.uid);
-      console.log("agoraHelper: user count"+ AGORA_CLIENT?.getRTCStats().UserCount);
+    agoraPlayer.AGORA_CLIENT!.on("user-joined",(user: IAgoraRTCRemoteUser)=>{
+      console.log("agoraPlayer: user joined" +user.uid);
+      console.log("agoraPlayer: user count"+ agoraPlayer.AGORA_CLIENT?.getRTCStats().UserCount);
     })
-    AGORA_CLIENT!.on("user-left", (user: IAgoraRTCRemoteUser)=> {
-      console.log("agoraHelper: user left" +user.uid)
+    agoraPlayer.AGORA_CLIENT!.on("user-left", (user: IAgoraRTCRemoteUser)=> {
+      console.log("agoraPlayer: user left" +user.uid)
     })
 
-    AGORA_CLIENT!.on("user-published", async (user:IAgoraRTCRemoteUser, mediaType: "audio" | "video") => {
-      console.log("agoraHelper: stream published by ID"+user.uid);
-      const remoteTrack = await AGORA_CLIENT!.subscribe(user,'audio');
+    agoraPlayer.AGORA_CLIENT!.on("user-published", async (user:IAgoraRTCRemoteUser, mediaType: "audio" | "video") => {
+      console.log("agoraPlayer: stream published by ID"+user.uid);
+      const remoteTrack = await agoraPlayer.AGORA_CLIENT!.subscribe(user,'audio');
       this.setRemoteTrack(remoteTrack);
       this.state.REMOTE_TRACK!.play();    
       // if(this.props.UID !== 'CvTBt6cgZCOwtKhQFgC3BdoIanS2'){
-          // console.log("agoraHelper: stream published by ID"+user.uid);
+          // console.log("agoraPlayer: stream published by ID"+user.uid);
           //
           // }
     })
 
-    AGORA_CLIENT!.on("user-unpublished", function (user :any) {
-      console.log("agoraHelper: stream-un-published")
+    agoraPlayer.AGORA_CLIENT!.on("user-unpublished", function (user :any) {
+      console.log("agoraPlayer: stream-un-published")
     })
     }
 }
   async initAgoraClient(){
-    AGORA_CLIENT = AgoraRTC.createClient({mode:'live',codec:'vp8'});
-    console.log("agoraHelper:  Client created"); 
-    this.joinChannel();
+    AgoraRTC.setLogLevel(3);
+    agoraPlayer.AGORA_CLIENT = AgoraRTC.createClient({mode:'live',codec:'vp8'});
+    console.log("agoraPlayer:  Client created"); 
+    await this.joinChannel();
     this.eventHandlers();
   }
 
 
   async joinChannel(){
     if(this.props.joinable){
-    console.log("agoraHelper: UID JOIN init "+this.props.UID);
-    if(!this.state.LOCAL_TRACK && AGORA_CLIENT){
+    console.log("agoraPlayer: UID JOIN init "+this.props.UID);
+    if(!this.state.LOCAL_TRACK && agoraPlayer.AGORA_CLIENT && !this.props.joined){
       try{
-      AGORA_CLIENT!.setClientRole('host');
-      const JOINED_CLIENT_SID =  await AGORA_CLIENT!.join(
+        agoraPlayer.AGORA_CLIENT!.setClientRole('host');
+      const JOINED_CLIENT_SID =  await agoraPlayer.AGORA_CLIENT!.join(
         RTC_OPTIONS.appID, 
         this.props.spaceData.agora_channel_name,
         this.props.spaceData.agora_channel_token,
-        null,
+        this.props.UID,
         );
         if(JOINED_CLIENT_SID){
           this.addAsAttendee();
+          this.props.setJoined(true);
+          this.props.setJoinedName(this.props.spaceData.name)
         }
-        AGORA_CLIENT!.enableAudioVolumeIndicator();
+        // agoraPlayer.AGORA_CLIENT!.enableAudioVolumeIndicator();
         this.setChannelUid(JOINED_CLIENT_SID!);
         this._publicandplayAudioTrack();
-          if(this.props.UID === 'CvTBt6cgZCOwtKhQFgC3BdoIanS2'){
-              this._publicandplayAudioTrack();
-          }
-          else{
-              console.log("agoraHelper: As audience");
-          }
         }
         catch(e:any){
           console.log("Error Occured"+e);
-          this.setToast(true,'agoraHelper: Fatal Error Occured');
+          this.setToast(true,'agoraPlayer: Fatal Error Occured');
         }
     }
       else{
-        console.log("agoraHelper:  Already local track present || No client"); 
+        console.log("agoraPlayer:  Already local track present || No client"); 
       }
     }
     else{
-      console.log("agoraHelper:  not joinable"); 
+      console.log("agoraPlayer:  not joinable"); 
     }
   }
 
@@ -313,28 +311,28 @@ async eventHandlers(){
   
     if(this.state.mic===true){
       LOCAL_AUDIO_TRACK.setEnabled(true).then(async ()=>{
-          await AGORA_CLIENT!.publish([this.state.LOCAL_TRACK!]);
+          await agoraPlayer.AGORA_CLIENT!.publish([this.state.LOCAL_TRACK!]);
       });  
-      console.log("agoraHelper: Audio track umuted");   
+      console.log("agoraPlayer: Audio track umuted");   
     }
     else{
-      console.log("agoraHelper: Audio track muted");
+      console.log("agoraPlayer: Audio track muted");
       LOCAL_AUDIO_TRACK.setEnabled(false);  
     }
     this.setLocalTrack(LOCAL_AUDIO_TRACK);
-    //this.state.LOCAL_TRACK!.play();
+    this.state.LOCAL_TRACK!.play();
 }
 
 async _setAsMic(){
   if(this.state.LOCAL_TRACK){
       if(this.state.mic===true){
         this.state.LOCAL_TRACK!.setEnabled(true).then(async ()=>{
-          await AGORA_CLIENT!.publish([this.state.LOCAL_TRACK!]);
+          await agoraPlayer.AGORA_CLIENT!.publish([this.state.LOCAL_TRACK!]);
         });  
-        console.log("agoraHelper: Audio track umuted");
+        console.log("agoraPlayer: Audio track umuted");
       }
       else{
-        console.log("agoraHelper: Audio track muted");
+        console.log("agoraPlayer: Audio track muted");
         this.state.LOCAL_TRACK!.setEnabled(false);  
         //await AGORA_CLIENT!.publish([this.state.LOCAL_TRACK!]);
       }
@@ -343,19 +341,22 @@ async _setAsMic(){
 
 
   async leaveCall(){
-    console.log("agoraHelper:  Audio track destroyed init");
+    console.log("agoraPlayer:  Audio track destroyed init");
      if(this.state.LOCAL_TRACK){
       this.state.LOCAL_TRACK.close();
-         await AGORA_CLIENT!.leave();
-          this.setChannelUid(null);
-         console.log("agoraHelper:  Audio local track destroyed");
+         await agoraPlayer.AGORA_CLIENT!.leave();
+         console.log("agoraPlayer:  Audio local track destroyed");
     }
     if(this.state.REMOTE_TRACK){
       this.state.REMOTE_TRACK.stop();
-         await AGORA_CLIENT!.leave();
-          this.setChannelUid(null);
-         console.log("agoraHelper:  Audio remote track destroyed");
+         await agoraPlayer.AGORA_CLIENT!.leave();
+         console.log("agoraPlayer:  Audio remote track destroyed");
     }
+    agoraPlayer.AGORA_CLIENT= null;
+    this.setChannelUid(null);
+    this.setAgoraClient(null);
+    this.setRemoteTrack(null);
+    this.setLocalTrack(null);
     this.removeAsAttendee();
     this.props.setJoined(false);
     this.props.setModal(false);
@@ -364,12 +365,10 @@ async _setAsMic(){
   }
 
   componentDidMount(){
-    this.props.setJoined(true);
-    this.props.setJoinedName(this.props.spaceData.name)
     this.initAgoraClient();
   }
   componentDidUpdate(){
-   // console.log("agoraHelper: Mic status change"+this.state.mic);
+   // console.log("agoraPlayer: Mic status change"+this.state.mic);
   }
   componentWillUnmount(){
     //this.leaveCall();

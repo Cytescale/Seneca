@@ -2,10 +2,18 @@ import axios from 'axios';
 import URLS from './api.routes';
 import imageKitCert from '../certs/imagekit.config';
 import {userData} from '../components/user';
+import userTempDb from '../components/userTempDb';
 
 
+
+const Usertmpdb = new userTempDb();
 
 export default class BackendHelper{
+     public static SuccessPass = 0;
+     public static MaxPass = 10;
+     public static CurrentPass = 0;
+
+
      UID :string|null = null;
      constructor(UID:string|null){
           this.UID = UID!;
@@ -29,7 +37,8 @@ export default class BackendHelper{
 
      async _updateUserInfo(data:userData){
           let respn =  null;
-           await axios.post(URLS.updateUserInfo,{uid:this.UID,data:data})
+           await axios.post(URLS.updateUserInfo,{uid:this.UID,data:data,
+               headers: {"Access-Control-Allow-Origin": "*"}})
               .then(res=>{
                 respn = res.data;
               })
@@ -42,7 +51,8 @@ export default class BackendHelper{
 
       async _delFollow(uid:string,suid:string){
           let respn =  null;
-          await axios.post(URLS.delFollow,{uid:uid,suid:suid})
+          await axios.post(URLS.delFollow,{uid:uid,suid:suid,
+               headers: {"Access-Control-Allow-Origin": "*"}})
              .then(res=>{
                respn = res.data;
              })
@@ -53,7 +63,11 @@ export default class BackendHelper{
       }
       async _getFollowCount(uid:string,suid:string){
           let respn =  null;
-          await axios.post(URLS.getFollowCount,{uid:uid,suid:suid})
+          await axios.post(URLS.getFollowCount,{
+               uid:uid,
+               suid:suid,
+               headers: {"Access-Control-Allow-Origin": "*"}
+          })
              .then(res=>{
                respn = res.data;
              })
@@ -66,7 +80,10 @@ export default class BackendHelper{
 
       async _addFollow(uid:string,suid:string){
           let respn =  null;
-          await axios.post(URLS.addFollow,{uid:uid,suid:suid})
+          await axios.post(URLS.addFollow,{
+               uid:uid,
+               suid:suid,
+               headers: {"Access-Control-Allow-Origin": "*"}})
              .then(res=>{
                respn = res.data;
              })
@@ -78,7 +95,11 @@ export default class BackendHelper{
 
       async _getFollowedBool(uid:string,suid:string){
           let respn =  null;
-           await axios.post(URLS.getFollowBool,{uid:uid,suid:suid})
+           await axios.post(URLS.getFollowBool,{
+                uid:uid,
+                suid:suid,
+                headers: {"Access-Control-Allow-Origin": "*"}
+               })
               .then(res=>{
                 respn = res.data;
               })
@@ -89,13 +110,63 @@ export default class BackendHelper{
       }
  
       async _getOtherUserInfo(suid:string){
+          BackendHelper.CurrentPass++;
           let respn =  null;
-           await axios.post(URLS.getUserInfo,{uid:suid})
+          if(BackendHelper.CurrentPass<BackendHelper.MaxPass){
+               let bol = await Usertmpdb.ifInList(suid)
+               if(bol===false){
+                    console.log('backend helper: user data request | no user already');
+               await axios.post(URLS.getUserInfo,{
+                    uid:suid,
+                    headers: {"Access-Control-Allow-Origin": "*"}
+               })
+               .then(async(res)=>{
+                    respn = res.data;
+                    let uData:userData = res.data.data;
+                    BackendHelper.SuccessPass++;
+                    let bl = await Usertmpdb.ifInList(uData.UID);
+                    if(uData!==null){
+                         if(!bl){Usertmpdb.addUser(uData);}
+                    }
+
+               })
+               .catch(err=>{
+                    console.log(err);
+               });
+               }
+               else{
+                    console.log('backend helper: user data request | already has user');
+                    respn = {     
+                         data: Usertmpdb.getUserByUid(suid),
+                         errBool: false,
+                         errCode: 0,
+                         errMess: "null",
+                    }
+                   
+               }
+               BackendHelper.CurrentPass--;
+          }
+          else{
+               respn = {     
+                    data: null,
+                    errBool: true,
+                    errCode: 0,
+                    errMess: "Too many request",
+               }
+          }
+          return respn;
+      }
+
+      async _getUserJoiningId(jid:string){
+          let respn =  null;
+           await axios.post(URLS.getUserByJoiningId,{
+                jid:jid,
+                headers: {"Access-Control-Allow-Origin": "*"}
+               })
               .then(res=>{
                 respn = res.data;
               })
               .catch(err=>{
- 
                    console.log(err);
               });
            return respn;
@@ -103,7 +174,11 @@ export default class BackendHelper{
 
      async _getUserInfo(){
          let respn =  null;
-          await axios.post(URLS.getUserInfo,{uid:this.UID})
+          await axios.post(URLS.getUserInfo,{
+               uid:this.UID,
+               headers: {"Access-Control-Allow-Origin": "*"}
+
+          })
              .then(res=>{
                respn = res.data;
              })

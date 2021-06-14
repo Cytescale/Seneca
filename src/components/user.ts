@@ -1,4 +1,5 @@
 declare type userData = {
+     UID:string,
      enail:string,
      dname:string,
      cname:string,
@@ -8,7 +9,7 @@ declare type userData = {
      delete_bool:boolean,
      init_bool:boolean,
      admin_bool:boolean,
-     
+     joining_id:number
 }
 
 export type{userData}
@@ -29,6 +30,7 @@ export default class User {
      }
      setUserData(val:userData|null):void{
           User.DATA = val;
+          
      }
      getUserData():userData|null{
           return User.DATA;
