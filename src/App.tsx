@@ -77,10 +77,8 @@ export default class App extends React.Component<appProps,appstate> implements a
       console.log("PRE AUTHs CHECK"+res!);
       if(!res){this.setAuth(false);  return;}
       this.setAuth(res!)
-    });
-    FirebaseHelper.initFirebaseBackend().then((res:any)=>{
-      this.setConnection(res); 
-    });
+    })
+    this.setConnection(true); ;
   }
 
   render(){

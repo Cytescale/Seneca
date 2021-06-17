@@ -1,4 +1,4 @@
-import {IonApp, IonRouterOutlet,IonTabs,IonModal,IonTabBar,IonTab,IonTabButton,IonContent,IonButton, IonHeader, IonPage, IonItem,IonLabel,IonImg,IonInput,IonTitle, IonToolbar } from '@ionic/react';
+import {IonApp, IonRouterOutlet,IonSplitPane,IonMenu,IonList,IonTabs,IonModal,IonTabBar,IonTab,IonTabButton,IonContent,IonButton, IonHeader, IonPage, IonItem,IonLabel,IonImg,IonInput,IonTitle, IonToolbar } from '@ionic/react';
 import { IonReactRouter } from '@ionic/react-router';
 import { Redirect, Route, withRouter } from 'react-router-dom';
 import '../../theme/styles/land.style.css';
@@ -10,7 +10,7 @@ import Search from './search/index';
 import Profile from './profile';
 import EditProfile from '../editProfile';
 import Space from './space';
-
+import SecSpace from './space/secSpace';
 import React, { useState } from 'react';
 
 import Land from './Land';
@@ -24,29 +24,36 @@ import { Home_UnSelec,
      Home_Selec,
      Search_Selec,
      Expl_Selec,
+     Add_box,
+     Right_arrow,
      stream,
      Call_end,
+     profPlaceholder,
      Profile_Selec} from '../../assets/'
 import history from '../history';
 import Home from '../Home';
 import SpaceCreate from './spaceCreate';
+import { menuController } from '@ionic/core';
 
 
 declare interface TabInterface {
-     isAuth:boolean,
-     setAuth:any,
-     setSpaceModal:any
-     setSid:any
-     sid:string
+     isAuth?:boolean,
+     setAuth?:any,
+     setSpaceModal?:any
+     setSid?:any
+     sid?:string
 }
 
 
 const TabCont:React.FC<TabInterface>=(props:TabInterface)=>{
+//     menuController.enable(true, 'first');
+//     menuController.open('first');
+
      return(
           <IonReactRouter history={history} >
             <IonRouterOutlet>
           <Route exact path="/home" component={Home}/>
-          <Route path="/space/:sid" render={()=><Space setSpaceModal={props.setSpaceModal} />}/>
+          <Route path="/land/space" render={()=><SecSpace />} exact/>
           <Route exact path="/editprofile" component={EditProfile}/>
           <Route exact path="/spacecreate" component={SpaceCreate}/>
           <Route exact path="/login" render={()=><Login setAuth={props.setAuth} /> }/>
@@ -54,28 +61,21 @@ const TabCont:React.FC<TabInterface>=(props:TabInterface)=>{
                     return(
                          <IonTabs >               
                          <IonRouterOutlet >
-                              <Route  path='/land/:tab(home)'component={Home} exact/>
                               <Route  path='/land/:tab(search)'component={Search} exact/>
+                              <Route  path='/land/space' render={()=><SecSpace/>} exact/>
                               <Route  path='/land/explore' render={()=><Explore setSpaceModal={props.setSpaceModal} setSid={props.setSid} sid={props.sid} />} exact/>
                               <Route  path='/land/:tab(profile)' render={()=><Profile setSpaceModal={props.setSpaceModal} />} exact/>
                               <Route  path="/land/" render={() => <Redirect to="/land/explore" />} exact/>
                          </IonRouterOutlet>
                               <IonTabBar slot="bottom" className='app-bottombar-main-cont'>
-                                   {/* <IonTabButton tab="home"  href='/land/home'>
-                                   <IonImg src={Home_UnSelec} className='app-bottombar-ico' />
-                                   <IonLabel className='app-bottombar-lab-tit'>Home</IonLabel>
-                                   </IonTabButton> */}
                                    <IonTabButton tab="explore" href='/land/explore' >
                                    <IonImg src={Expl_UnSelec} className='app-bottombar-ico'/>
-                                   
                                    </IonTabButton> 
                                    <IonTabButton tab="search" href='/land/search'>
                                    <IonImg src={Search_UnSelec} className='app-bottombar-ico' />
-                                   
                                    </IonTabButton>
                                    <IonTabButton tab="profile"  href='/land/profile'>
                                    <IonImg src={Profile_UnSelec} className='app-bottombar-ico' />
-
                                    </IonTabButton>
                               </IonTabBar>     
                          </IonTabs>
@@ -104,39 +104,79 @@ const LandBase:React.FC<{isAuth:boolean,setAuth:any}> = (props)=>{
      let [sid,setSid] = useState<string|null>(null);
      let [joined,setJoined] = useState<boolean>(false);
      let [joinedName,setJoinedName] = useState<string|null>(null);
-
       return(
           <IonApp>
           <IonReactRouter>
-         <IonPage id="main">
+         <IonPage>
          {joined?<CurrentPlayingSpace setModal={setSpaceModal} name={joinedName}/>:null}             
-         <IonContent fullscreen className='app-content-main-cont'>
-                     <TabCont 
-                     isAuth={props.isAuth} 
-                     setAuth={props.setAuth} 
-                      setSpaceModal={setSpaceModal} 
-                      setSid={setSid} 
-                  
-                      sid={sid!} />
-                     <IonModal
-                         isOpen={showSpaceModal}
-                         cssClass='app-modal-main-cont'
-                         onDidDismiss={() => setSpaceModal(false)}>
-                         <Space 
-                             setModal={setSpaceModal} 
-                             setSid={setSid} 
-                             sid={sid}
-                             joined={joined}
-                             setJoined={setJoined}
-                             joinedName={joinedName}
-                             setJoinedName={setJoinedName}
-                         />
-                    </IonModal>
+         <IonContent fullscreen className='app-content-main-cont' id="appContentId">
+                         <TabCont setSpaceModal={setSpaceModal} setSid={setSid} />
+                         {/* <Explore setSpaceModal={setSpaceModal} setSid={setSid} sid={sid} /> */}
+                         <IonModal
+                              isOpen={showSpaceModal}
+                              cssClass='app-modal-main-cont'
+                              onDidDismiss={() => setSpaceModal(false)}
+                              swipeToClose={true}
+                              showBackdrop={true}
+                              
+                              mode="ios"
+                              >
+                              <SecSpace 
+                              setModal={setSpaceModal} 
+                              setSid={setSid} 
+                              sid={sid}
+                              joined={joined}
+                              setJoined={setJoined}
+                              joinedName={joinedName}
+                              setJoinedName={setJoinedName}
+                              />
+                         </IonModal>     
+                         <IonModal
+                              isOpen={false}
+                              cssClass='app-modal-main-cont'
+                              swipeToClose={true}
+                              >
+                              <Profile />
+                         </IonModal>
           </IonContent>
+
+                                   <IonMenu  
+                                        side="start" 
+                                        swipeGesture={true}  
+                                        menuId="menuId"
+                                        className='appLeftMenuCont'
+                                        contentId="appContentId"
+                                        type='push'
+                                        
+                                        maxEdgeStart={40}>
+                                        <IonContent className='appContentMainCont'>
+                                             <div className='appSideChannelListCont'>
+                                                       <div>
+                                                          
+                                                           
+                                                            <div className='appSideChannelOuterCont '>
+                                                            <div className='appSideChannelCont'>CN1</div>
+                                                            </div>
+                                                            <div className='appSideChannelOuterCont '>
+                                                            <div className='appSideChannelCont menuButtSelec'>CN2</div>
+                                                            </div>
+                                                            <div className='appSideChannelOuterCont '>
+                                                            <div className='appSideChannelCont'>CN3</div>
+                                                            </div>
+                                                            <div className='appSideChannelHrCont'/>
+                                                            <div className='appSideChannelOuterCont '>
+                                                                 <div className='appSideChannelAddCont'> <IonImg src={Add_box} className='app-bottombar-ico'/></div>
+                                                            </div>
+                                                       </div>
+                                             </div>
+                                        </IonContent>
+                              </IonMenu>  
+
           </IonPage>
           </IonReactRouter>
            </IonApp>
      )
+     
 }
 
 export default LandBase

@@ -1,17 +1,19 @@
 declare type userData = {
-     UID:string,
-     enail:string,
+     _id:string,
+     uid:string,
+     email:string,
      dname:string,
      cname:string,
      uname:string,
      bio:string,
      login_method:number,
-     delete_bool:boolean,
+     deleted_bool:boolean,
      init_bool:boolean,
+     pvt_bool:boolean,
      admin_bool:boolean,
-     joining_id:number
+     joining_id:number,
+     
 }
-
 export type{userData}
 
 export default class User {

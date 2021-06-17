@@ -74,7 +74,7 @@ const  RenderAttnds:React.FC<any> = (props)=>{
           .then((data:any) =>{
           console.log('space: result'+data?.dname);
           setPd(
-               <div  className='app-chat-attnd-card'>
+                              <div  className='app-chat-attnd-card'>
                                     <div className='app-chat-attnd-card-outer-cont'>
                                          <div  className='app-chat-attnd-card-ico-outer-cont'>
                                               <div className='app-chat-attnd-card-ico-cont'>
@@ -250,7 +250,7 @@ const ChatCont:React.FC<{}> = (props) =>{
                broadUserdata:null,
                listners:0,
 
-               loading:true,
+               loading:false,
           }
           this.setMic = this.setMic.bind(this);
           this.setToast = this.setToast.bind(this);

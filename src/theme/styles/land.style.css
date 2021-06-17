@@ -1,10 +1,194 @@
 
 .app-content-main-cont{
-     
-     --background: var(--env-color-s1);
+     --background: #111111;
 }
+.app-head-lab-main-cont{
+     border-bottom: 1px solid var(--env-color-s2);
+     width: 100%;     
+     align-items: center;
+     --background:#131313;
+     color: #fff;
+     font-weight: 800;
+     font-size: 20px;
+     z-index: 99999;
+     position: fixed;
+     top: 0;
+     font-family: sen;
+     font-weight: 800;
+     font-size: 15px;
+}
+
+#menuId{
+     
+}
+
+.app-head-lab-ico{
+     width: 18px;
+     height: 18px;
+     color: #fff;
+}
+#appContentId{
+     box-shadow: 6px 0px 9px #e0e0e0;
+}
+.appLeftMenuCont{
+     --width: 72px;
+}
+.appRightMenuCont{
+     --width:80%;
+}
+.appContentMainCont{    
+     color: #fff;
+     width: 100%;
+     
+     --background:#111111;
+     border-right: 1px solid #111111;
+}
+
+.appSideChanneVisitlListCont{
+          width: 100%;
+          height: 100%;
+          font-weight:700;
+          margin-top: 32px;
+          font-family: sen;
+   
+}
+.appSideChanneVisitlListContHr{
+     width: 100%;
+     height: 1px;
+     background-color: #252525;
+     border-radius: 3px;
+     margin-top: 7px;
+     margin-bottom: 7px;
+}
+.appSideChanneVisitlListContTab{
+     color: #fff;
+     width: 90%;
+     font-size: 13px;
+     margin-left: 5%;
+     margin-top: 9px;
+     margin-bottom:9px;
+     background-color: #000000;
+     border-radius: 9px;
+     padding-left: 12px;
+     padding-top: 7px;
+     padding-bottom: 7px;
+}
+.appSideChanneVisitHeader{
+     width: 90%;
+     color: #fff;
+     background-color: #000000;
+     padding-left: 12px;
+     padding-top: 7px;
+     padding-bottom: 7px;
+     padding-right: 12px;
+     border-radius: 9px;
+     font-size: 16px;
+     margin-left: 5%;
+     display: inline-flex;
+     align-items: center;
+     
+}
+.appSideChanneVisitHeaderIcoCont{
+     width: 42px;
+     height: 42px;
+     overflow: hidden;
+     margin-right: 12px;
+     border-radius: 7px;
+}
+.appSideChanneMemCont{
+height: 42px;
+width: 90%;
+font-size: 13px;
+color: #fff;
+margin-top: 4px;
+border-radius: 8px;
+padding-left: 24px;
+display: inline-flex;
+align-items: center;
+}
+.appSideChanneMemContIcoCont{
+     width: 26px;
+     height: 26px;
+     border-radius: 100px;
+     overflow: hidden;
+     margin-right: 8px;
+}
+.appSideChanneMemContIco{
+     width: 100%;
+     height: 100%;
+     object-fit: fill;
+   
+}
+.appSideChannelListCont{
+     height: 100%;
+     width: 100%;
+     padding-top: 56px;
+}
+.appSideChannelOuterCont{
+     width: 72px;
+     display: flex;
+     align-items: center;
+     justify-content: center;
+     height: auto;
+     padding-top: 7px;
+     padding-bottom: 7px;
+}
+.appSideChannelCont{
+     width: 42px;
+     height: 42px;
+     display: flex;
+     color: #fff;
+     justify-content: center;
+     align-items: center;
+     font-size: 13px;
+     font-weight: 700;
+     background-color: #454545;
+     border-radius: 100px;
+   
+}
+.menuButtUnSelec{
+
+}
+.menuButtSelec{
+ border:1px solid #7978FF;
+}
+.appSideChannelHrCont{
+     width: 80%;
+     margin-left: 10%;
+     height: 1px;
+     background-color: #353535;
+     margin-top: 10px;
+     margin-bottom: 10px;
+     border-radius: 100px;
+     
+}
+.appSideChannelAddCont{
+     width: 42px;
+     height: 42px;
+     display: flex;
+     justify-content: center;
+     align-items: center;
+     font-size: 24px;
+     font-weight: 700;
+     background: #353535;
+     color: #82FF70;
+     border-radius: 100px;
+     margin-bottom: 10px;
+}
+
+.app-head-lab-crt-butt{
+     position: absolute;
+     right: 0;
+     box-shadow: none;
+     --background:rgba(0,0,0,0);
+     text-transform: none;
+     color: #82FF70;
+     outline: none;
+     border-style: none;
+}
+
+
 .app-modal-main-cont{
-     margin-top: 0px;
      --background:transparent;
 }
 .app-bottombar-lab-tit{
@@ -86,23 +270,39 @@
 
 }
 .app-feat-space-main-cont{
-     width: 100%;
+     width: auto;  
      height: 150px;
      border-radius: 8px;
      overflow: hidden;
-     margin-bottom: 18px;
      position: relative;
-     border: 1px solid #959595;
+     background: linear-gradient(224.97deg, rgba(32, 32, 32, 0.45) 0%, rgba(24, 24, 24, 0.45) 90.72%);
+     
 }
+
+.app-intro-main-cont{
+     width: 90%;
+     margin-left: 5%;
+     border-radius: 6px;
+     height: 10px;
+     background-color: var(--primary-color-light);
+     border: 1px solid var(--primary-color-dark);
+}
+
+.app-render-region-cont{
+     width: 100%;
+     padding: 12px;
+     display: grid;
+     grid-template-columns: repeat(1, 1fr);
+     gap: 12px;
+}
+
 .app-feat-space-main-cont-ripp{
      color:white;
 }
 .app-feat-space-ban-art{
-     width: 100%;
-     height: 200px;
-     position: absolute;
-     top: 0;
-     bottom: 0;
+     width: 72px;
+     height: 72px;
+     
      outline: none;
      overflow: hidden;
      background-color: var(--env-color-s2);    
@@ -267,7 +467,7 @@
      display: flex;
      justify-content: center;
      align-items: center;
-     background-color: var(--env-color-s1);
+     background-color: #111111;
      border-radius: 100px;
      padding-left: 10px;
      padding-right: 10px;
@@ -501,15 +701,6 @@ outline: none;
      font-family: sen;
      font-size: 16px;
 }
-.app-space-toolbar-main-cont{
-     --background: var(--env-color-s1);
-     --color:#fff;
-     height: 62px;
-     display: inline-flex;
-     position: fixed;
-     justify-content: center;
-     
-}
 .app-space-banner-bottom-main-cont{
      position: absolute;
      height: 152px;
@@ -521,16 +712,6 @@ outline: none;
      align-items: center;
      
 
-}
-.space-head-butt{
-     background-color: var(--env-color-s1);    
-     width: 42px;
-     height: 42px;
-     border-radius: 100px;
-     outline: none;
-     display: flex;
-     justify-content: center;
-     align-items: center;
 }
 
 .space-head-butt-ico{
@@ -689,20 +870,6 @@ color: #f1f1f1;
      border-radius: 100px;
      vertical-align: middle;
 }
-.app-chat-inp-main-cont{
-     height: 82px;
-     width: 100%;
-     position: fixed;
-     bottom:0;
-     display: inline-flex;
-     align-items: center;
-     justify-content: center;
-     /* background-color: var(--env-color-s1); */
-     background: rgba(0, 0, 0, 0.45);
-     backdrop-filter: blur(32px);
-     z-index:9999999;
-     color: #fff;
-}    
 
 .app-chat-inp-but-end{
      height: 42px;
@@ -746,7 +913,7 @@ color: #f1f1f1;
 }
 
 .app-chat-inp-butt{
-     background-color: var(--env-color-s2);    
+     background-color:#292929;    
      width: 52px;
      height: 52px;
      border-radius: 100px;
@@ -757,8 +924,8 @@ color: #f1f1f1;
  
 }
 .app-chat-inp-butt-ico{
-     width: 26px;
-     height: 26px;
+     width: 21px;
+     height: 21px;
 }
 .send-butt-cont{
      margin-right: 7px;

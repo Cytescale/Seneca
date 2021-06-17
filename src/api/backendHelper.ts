@@ -3,8 +3,7 @@ import URLS from './api.routes';
 import imageKitCert from '../certs/imagekit.config';
 import {userData} from '../components/user';
 import userTempDb from '../components/userTempDb';
-
-
+import nexusResponse from './nexusResponse';
 
 const Usertmpdb = new userTempDb();
 
@@ -13,15 +12,39 @@ export default class BackendHelper{
      public static MaxPass = 10;
      public static CurrentPass = 0;
 
-
      UID :string|null = null;
      constructor(UID:string|null){
           this.UID = UID!;
      }
      
-     async _getSpace(){
-          
-     }
+   
+      _getUserInfo(uid:any):Promise<nexusResponse>{    
+          var data = JSON.stringify({
+               "uid": uid
+          });             
+          return new Promise((resolve, reject) => {
+               setTimeout(async ()=>{
+                    await axios(
+                         {method: 'post',
+                         url:URLS.getUserInfo,
+                         headers: { 
+                         'Content-Type': 'application/json'
+                         },
+                         data : data
+                         }
+                    )
+                    .then((response)=>{
+                         let rd:nexusResponse = response.data;
+                         if(!rd.errBool){resolve(rd);}else{reject(rd);}
+                    })
+                    .catch((error)=>{
+                    console.log(error);
+                    let sr:nexusResponse ={errBool:true,errMess:error,responseData:null,}
+                    reject(sr);
+                    });
+               }, 5000);
+          })
+      }
 
      async _createSpace(data:any){
           let respn =  null;
@@ -43,7 +66,6 @@ export default class BackendHelper{
                 respn = res.data;
               })
               .catch(err=>{
- 
                    console.log(err);
               });
            return respn;
@@ -108,54 +130,6 @@ export default class BackendHelper{
               });
            return respn;
       }
- 
-      async _getOtherUserInfo(suid:string){
-          BackendHelper.CurrentPass++;
-          let respn =  null;
-          if(BackendHelper.CurrentPass<BackendHelper.MaxPass){
-               let bol = await Usertmpdb.ifInList(suid)
-               if(bol===false){
-                    console.log('backend helper: user data request | no user already');
-               await axios.post(URLS.getUserInfo,{
-                    uid:suid,
-                    headers: {"Access-Control-Allow-Origin": "*"}
-               })
-               .then(async(res)=>{
-                    respn = res.data;
-                    let uData:userData = res.data.data;
-                    BackendHelper.SuccessPass++;
-                    let bl = await Usertmpdb.ifInList(uData.UID);
-                    if(uData!==null){
-                         if(!bl){Usertmpdb.addUser(uData);}
-                    }
-
-               })
-               .catch(err=>{
-                    console.log(err);
-               });
-               }
-               else{
-                    console.log('backend helper: user data request | already has user');
-                    respn = {     
-                         data: Usertmpdb.getUserByUid(suid),
-                         errBool: false,
-                         errCode: 0,
-                         errMess: "null",
-                    }
-                   
-               }
-               BackendHelper.CurrentPass--;
-          }
-          else{
-               respn = {     
-                    data: null,
-                    errBool: true,
-                    errCode: 0,
-                    errMess: "Too many request",
-               }
-          }
-          return respn;
-      }
 
       async _getUserJoiningId(jid:string){
           let respn =  null;
@@ -172,22 +146,7 @@ export default class BackendHelper{
            return respn;
       }
 
-     async _getUserInfo(){
-         let respn =  null;
-          await axios.post(URLS.getUserInfo,{
-               uid:this.UID,
-               headers: {"Access-Control-Allow-Origin": "*"}
-
-          })
-             .then(res=>{
-               respn = res.data;
-             })
-             .catch(err=>{
-
-                  console.log(err);
-             });
-          return respn;
-     }
+     
 
      async _get_image_kit_auth(){
           let gotFile = null;
@@ -204,9 +163,6 @@ export default class BackendHelper{
              });
              return gotFile;
      }
-
-     
-
      async _image_upload(file_data:any){
           let tok:any = await this._get_image_kit_auth();     
           const formData = new FormData();

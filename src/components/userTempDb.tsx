@@ -20,7 +20,7 @@ class userTempDb{
      public getUserByUid(uid:string):userData|null{
           let fd:userData|null= null;
           this.getUserList().forEach(e => {
-               if(e.UID == uid){
+               if(e.uid == uid){
                     fd = e;
                     return;
                }

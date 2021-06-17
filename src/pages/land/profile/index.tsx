@@ -21,7 +21,7 @@ import pep2 from '../../../assets/placeholders/pep2.jpg'
 import { setToken,setUid } from '../../../api/firebaseHelper';
 import history from '../../history';
 import User from '../../../components/user';
-
+import nexusResponse from '../../../api/nexusResponse';
 
 import BackendHelper from '../../../api/backendHelper';
 import { getUid } from '../../../api/firebaseHelper';
@@ -118,7 +118,7 @@ const EditButton:React.FC<{}> = (props)=>{
           }
           if(user.getUserUid())backendHelper = new BackendHelper(user.getUserUid()!);
           if(backendHelper){
-               backendHelper._getUserInfo().then((res:any)=>{
+               backendHelper._getUserInfo(user.getUserUid()).then((res:nexusResponse)=>{
                     if(res.errBool!==true){
                          backendHelper?._getFollowCount(user.getUserUid()!,user.getUserUid()!).then((cres:any)=>{
                               if(cres.errBool==false){
@@ -129,7 +129,7 @@ const EditButton:React.FC<{}> = (props)=>{
                                    console.log(cres.errMess);
                               }
                          });
-                         user.setUserData(res.data);
+                         user.setUserData(res.responseData);
                          this.setUserDataLoad(false);
                          console.log(user.getUserData()!.cname);
                     }

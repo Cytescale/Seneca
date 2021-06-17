@@ -128,21 +128,7 @@ export default class firebaseHelper implements firebaseHelperInter{
      }
 
      async initFirebaseBackend(callback?:any) {
-          let ress = await axios.post(URLS.backendInit,{headers: {'Access-Control-Allow-Origin' : '*',}})
-          .then((res:any)=>{
-            console.log("firebasehelper | Backend firebase app init success");            
-            firebaseHelper._CONNTECD  = true;
-            if(callback)callback(true);
-            return true;
-          })
-          .catch(err=>{
-            console.log("firebasehelper | Backend firebase app init failure "+err);
-            firebaseHelper._CONNTECD  = false;
-            if(callback)callback(false);
-            throw new Error(err);
-            return false;
-          });
-          return ress;
+          throw new Error("Method not implemented.");
      }
      getConnected():(typeof firebaseHelper._CONNTECD){
           return firebaseHelper._CONNTECD;

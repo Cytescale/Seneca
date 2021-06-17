@@ -19,9 +19,14 @@ import downArrow from './svg/down-arrow.svg';
 import Group from './svg/group.svg';
 import stream from './svg/stream.svg';
 import headphones from './svg/headphones.svg';
+import Menu from './svg/menu.svg';
 import Profile_placeholder from './png/profile_placeholder.png';
+import Right_arrow from './svg/right-arrow.svg';
+import Add_box from './svg/add-box.svg';
 const  profPlaceholder = "https://gravatar.com/avatar/dba6bae8c566f9d4041fb9cd9ada7741?d=identicon&f=y";
 export {CancelIco,
+     Right_arrow,
+     Add_box,
      Home_UnSelec,
      Search_UnSelec,
      Expl_UnSelec,
@@ -31,6 +36,7 @@ export {CancelIco,
      Expl_Selec,
      Profile_Selec,
      Mic_UnSelec,
+     Menu,
      More_verti,
      Call_end,
      Person_add,

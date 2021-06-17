@@ -4,11 +4,6 @@ body{
 
 }    
 
-.app-start-spacer{
-     height: 52px;
-     width: 100%;
-}
-
 .app-content-loading-main-cont{
      display: flex;
      width: 100%;
@@ -90,19 +85,25 @@ body{
 }
 .app-bottombar-main-cont{
      height: 58px;
-     --background:var(--env-color-s1);
-     --ripple-color:var(--primary-color-light);
+     --background:#101010;
      border-top: 1px solid var(--env-color-s2);
 }
 .app-bottombar-ico{
      width: 18px;
      height: 18px;
+     color: #fff;
+}
+.app-bottombar-ico-right{
+     width: 26px;
+     height: 26px;
 }
 .app-bottombar-outer-main-cont{
      z-index: 99999999;
 }
 .app-render-content{
-
+     margin-top: 60px;
+     border-top-left-radius: 12px;
+     border-top-right-radius: 12px;     
 }
 .app-fab-main-butt{
      margin: 12px;

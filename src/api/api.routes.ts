@@ -1,13 +1,12 @@
 let _BASE_API_URL = process.env.PUBLIC_API_HOST
 if(process.env.NODE_ENV=='development'){
-     _BASE_API_URL = 'http://172.20.10.6:3000/api/'
+     _BASE_API_URL = 'http://localhost:8200/api/'
 }
 if(process.env.NODE_ENV=='production'){
-     _BASE_API_URL = 'https://titan-alpha.vercel.app/api/'
+     _BASE_API_URL = 'https://ec2-65-2-40-247.ap-south-1.compute.amazonaws.com:8200/api/'
 }
 
-type URLinter = {
-     backendInit:string
+export declare type URLinter = {
      getUserInfo: string
      getUserByJoiningId:string
      getFollowBool:string
@@ -19,15 +18,14 @@ type URLinter = {
      imagekitAuth:string
 }
 const URLS:URLinter = {
-     getUserInfo:_BASE_API_URL+'db/getUser',
-     getUserByJoiningId:_BASE_API_URL+'db/getUserJoiningId',
-     imagekitAuth:_BASE_API_URL+"cdn/imageKitAuth",
-     updateUserInfo:_BASE_API_URL+"db/updateUser",
-     getFollowBool:_BASE_API_URL+"db/getFollow",
-     getFollowCount:_BASE_API_URL+"db/getFollCount",
-     delFollow:_BASE_API_URL+"db/delUserFollow",
-     addFollow:_BASE_API_URL+"db/addUserFollow",
-     createSpace:_BASE_API_URL+"agora/createSpace",
-     backendInit : _BASE_API_URL+'firebase_firestore_init'
+     getUserInfo:_BASE_API_URL+'getUserDatabyUid',
+     getUserByJoiningId:_BASE_API_URL+'getUserDatabyJid',
+     imagekitAuth:_BASE_API_URL+"imageKitAuth",
+     updateUserInfo:_BASE_API_URL+"updateUserData",
+     getFollowBool:_BASE_API_URL+"getRelationData",
+     getFollowCount:_BASE_API_URL+"getFollowCount",
+     delFollow:_BASE_API_URL+"delRelationData",
+     addFollow:_BASE_API_URL+"makeRelationData",
+     createSpace:_BASE_API_URL+"makeSpaceData",
 }
 export default URLS;

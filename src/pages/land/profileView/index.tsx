@@ -21,7 +21,7 @@ import pep2 from '../../../assets/placeholders/pep2.jpg'
 import { setToken,setUid } from '../../../api/firebaseHelper';
 import history from '../../history';
 import User, { userData } from '../../../components/user';
-
+import nexusResponse from '../../../api/nexusResponse';
 
 import BackendHelper from '../../../api/backendHelper';
 import { getUid } from '../../../api/firebaseHelper';
@@ -163,7 +163,7 @@ export default class ProfileView<profileViewInter> extends React.Component<any,{
           }
           if(this.props.suid)backendHelper = new BackendHelper(this.props.suid!);
           if(backendHelper){
-               backendHelper._getUserInfo().then((res:any)=>{
+               backendHelper._getUserInfo(user.getUserUid()).then((res:any)=>{
                     if(res.errBool!==true){
                          backendHelper?._getFollowCount(user.getUserUid()!,this.props.suid!).then((cres:any)=>{
                               if(cres.errBool==false){

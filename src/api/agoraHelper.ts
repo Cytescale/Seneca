@@ -1,5 +1,7 @@
 import AgoraRTC, { IAgoraRTCClient, IAgoraRTCRemoteUser, IMicrophoneAudioTrack, IRemoteAudioTrack, UID } from "agora-rtc-sdk-ng";
+import nexusResponse from "./nexusResponse";
 import BackendHelper from "./backendHelper";
+
 
 let backendHelper:BackendHelper|null = new BackendHelper(null);
 
@@ -43,11 +45,11 @@ export default class agoraHelper{
      }
 
      public async getJoiningId(){
-          backendHelper?._getOtherUserInfo(agoraHelper.UID!).then((res:any)=>{
-               if(res){
-                    if(res.data){
-                         if(res.data.joining_id){
-                         this.setJoiningId(res.data.joining_id)
+          backendHelper?._getUserInfo(agoraHelper.UID!).then((res:nexusResponse)=>{
+               if(res && !res.errBool){
+                    if(res.responseData){
+                         if(res.responseData.joining_id){
+                         this.setJoiningId(res.responseData.joining_id)
                          }
                          else{
                               console.log("agoraHelper: joinining id not found");

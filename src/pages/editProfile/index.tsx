@@ -31,6 +31,7 @@ import User,{userData} from '../../components/user';
 
 import BackendHelper from '../../api/backendHelper';
 import { getUid } from '../../api/firebaseHelper';
+import nexusResponse from '../../api/nexusResponse';
 let backendHelper:BackendHelper|null = null;
 const user = new User();
 let editUser:userData|null = null;
@@ -174,9 +175,9 @@ export default class EditProfile<editProfileProps> extends React.Component<{},{
           }
           if(user.getUserUid())backendHelper = new BackendHelper(user.getUserUid()!);
           if(backendHelper){
-               backendHelper._getUserInfo().then((res:any)=>{
+               backendHelper._getUserInfo(user.getUserUid()).then((res:nexusResponse)=>{
                     if(res.errBool!==true){
-                         editUser = res.data;
+                         editUser = res.responseData;
                          this.setUserDataLoad(false);
                     }
                });

@@ -1,0 +1,105 @@
+
+.app-space-content{
+     width: 100%;
+     height: 100%;
+     padding: 16px;
+     padding-top: 62px;
+     background: linear-gradient(167.61deg, #171717 -3.06%, #111111 20.02%, #000000 100%);
+}
+.app-space-toolbar-main-cont{
+     --color:#fff;
+     height: 62px;
+     display: inline-flex;
+     --background: linear-gradient(180deg, #0F0F0F 0%, rgba(15, 15, 15, 0.44) 50%, rgba(15, 15, 15, 0) 100%);
+     position: fixed;
+     justify-content: center;
+     
+}
+.space-head-butt{
+     background-color: var(--env-color-s2);    
+     width: 42px;
+     height: 42px;
+     border-radius: 100px;
+     outline: none;
+     display: flex;
+     justify-content: center;
+     align-items: center;
+}
+
+.app-space-tit-main-cont{
+
+     width: 100%;
+     font-size: 20px;
+     font-family: sen;
+     font-weight: 800;
+     color: #fff;
+}
+
+
+.app-chat-inp-main-cont{
+     height: 92px;
+     width: 100%;
+     position: fixed;
+     bottom:0;
+     display: inline-flex;
+     align-items: center;
+     justify-content: center;
+     /* background-color: var(--env-color-s1); */
+     background: rgba(0, 0, 0, 0.45);
+     backdrop-filter: blur(32px);
+     z-index:9999999;
+     color: #fff;
+}  
+
+.app-space-tit-data-main-cont{
+     display: inline-flex;
+     justify-content: center;
+     align-items: center;
+     padding-left: 8px;
+     padding-right: 8px;
+     padding-top: 4px;
+     padding-bottom: 4px;
+     border-radius: 5px;
+     background-color: #090909;    
+     color: #fff;
+     font-family: sen;
+     font-size: 14px;
+     margin-right: 4px;
+     font-weight: 700;
+}
+.app-space-des-main-cont{
+     margin-top: 3px;
+     color: #e0e0e0;
+     font-family: sen;
+     font-size: 12px;
+     
+}
+.app-space-tit-main-cont-ico{
+     width: 72px;
+     width: 72px;
+     border-radius: 100px;
+     object-fit: fill;
+     margin-bottom: 12px;
+     overflow: hidden;
+}
+.app-space-tit-data-outer-main-cont{
+     margin-top: 10px;
+}
+.app-space-tit-data-main-cont-ico{
+     width: 14px;
+     height: 14px;
+     margin-right: 5px;
+}
+.app-space-hr-main-cont{
+     width: 100%;
+     height: auto;
+     margin-top: 32px;
+     color: #fff;
+     font-size: 14px;
+     font-weight: 700;
+     font-family: sen;
+     padding-bottom: 8px;
+     padding-left: 5px;
+     border-bottom: 1px solid #252525;
+     margin-bottom: 12px;
+}
