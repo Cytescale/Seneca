@@ -12,36 +12,28 @@ import EditProfile from '../editProfile';
 import Space from './space';
 import SecSpace from './space/secSpace';
 import React, { useState } from 'react';
-
+import ProfileList from './profile/profileList';
 import Land from './Land';
 
 import Login from '../login/Login';
 
-import { Home_UnSelec,
+import { 
+     Add,
      Search_UnSelec,
      Expl_UnSelec,
      Profile_UnSelec,
-     Home_Selec,
-     Search_Selec,
-     Expl_Selec,
-     Add_box,
-     Right_arrow,
      stream,
-     Call_end,
-     profPlaceholder,
-     Profile_Selec} from '../../assets/'
+     } from '../../assets/'
 import history from '../history';
 import Home from '../Home';
 import SpaceCreate from './spaceCreate';
 import { menuController } from '@ionic/core';
+import spaceInter from '../../components/spaceInter';
+import landInter from '../../components/landInter';
 
 
-declare interface TabInterface {
-     isAuth?:boolean,
-     setAuth?:any,
-     setSpaceModal?:any
-     setSid?:any
-     sid?:string
+declare interface TabInterface extends landInter{
+     
 }
 
 
@@ -63,7 +55,7 @@ const TabCont:React.FC<TabInterface>=(props:TabInterface)=>{
                          <IonRouterOutlet >
                               <Route  path='/land/:tab(search)'component={Search} exact/>
                               <Route  path='/land/space' render={()=><SecSpace/>} exact/>
-                              <Route  path='/land/explore' render={()=><Explore setSpaceModal={props.setSpaceModal} setSid={props.setSid} sid={props.sid} />} exact/>
+                              <Route  path='/land/explore' render={()=><Explore {...props} />} exact/>
                               <Route  path='/land/:tab(profile)' render={()=><Profile setSpaceModal={props.setSpaceModal} />} exact/>
                               <Route  path="/land/" render={() => <Redirect to="/land/explore" />} exact/>
                          </IonRouterOutlet>
@@ -102,35 +94,75 @@ const CurrentPlayingSpace:React.FC<any> = (props:any)=>{
 const LandBase:React.FC<{isAuth:boolean,setAuth:any}> = (props)=>{
      let [showSpaceModal , setSpaceModal] = useState<boolean>(false);
      let [sid,setSid] = useState<string|null>(null);
+
      let [joined,setJoined] = useState<boolean>(false);
      let [joinedName,setJoinedName] = useState<string|null>(null);
+     
+     let [showProfileListModal,setProfileListModal] = useState<boolean>(false);
+     let [profileModalUid,setProfileModalUid] = useState<string|null>(null);
+
+     let [mic,setMic] = useState<boolean>(false);
+     let [spaceData,setSpaceData] = useState<spaceInter|null>(null);
+
       return(
           <IonApp>
           <IonReactRouter>
          <IonPage>
          {joined?<CurrentPlayingSpace setModal={setSpaceModal} name={joinedName}/>:null}             
          <IonContent fullscreen className='app-content-main-cont' id="appContentId">
-                         <TabCont setSpaceModal={setSpaceModal} setSid={setSid} />
-                         {/* <Explore setSpaceModal={setSpaceModal} setSid={setSid} sid={sid} /> */}
+                         <TabCont 
+                         setSpaceModal={setSpaceModal} 
+                         setSid={setSid} 
+                         sid={sid!} 
+                         setSpaceData={setSpaceData} 
+                         spaceData={spaceData!} 
+                         setProfileModalUid={setProfileModalUid}
+                         setProfileListModal={setProfileListModal}     
+                         />
                          <IonModal
                               isOpen={showSpaceModal}
                               cssClass='app-modal-main-cont'
                               onDidDismiss={() => setSpaceModal(false)}
                               swipeToClose={true}
                               showBackdrop={true}
-                              
                               mode="ios"
                               >
-                              <SecSpace 
-                              setModal={setSpaceModal} 
-                              setSid={setSid} 
-                              sid={sid}
-                              joined={joined}
-                              setJoined={setJoined}
-                              joinedName={joinedName}
-                              setJoinedName={setJoinedName}
-                              />
+                                   <SecSpace 
+                                   setProfileListModal={setProfileListModal}
+                                   setProfileModalUid={profileModalUid}
+                                   
+                                   setSpaceModal={setSpaceModal} 
+                                   setSid={setSid} 
+                                   sid={sid}
+
+                                   joined={joined}
+                                   setJoined={setJoined}
+                                   joinedName={joinedName}
+                                   setJoinedName={setJoinedName}
+
+                                   spaceData={spaceData}
+                                   setSpaceData={setSpaceData}
+
+                                   mic={mic}
+                                   setMic={setMic}
+
+                                   />
                          </IonModal>     
+                         <IonModal
+                              isOpen={showProfileListModal}
+                              cssClass='app-profile-list-modal-main-cont'
+                              onDidDismiss={() => setProfileListModal(false)}
+                              swipeToClose={true}
+                              showBackdrop={true}
+                              mode="ios"
+                              >
+                              <div>
+                                   <div id='app-profile-list-modal-puller'/>
+                                   <ProfileList 
+                                        setProfileListModal={setProfileListModal}
+                                   />
+                              </div>
+                         </IonModal>    
                          <IonModal
                               isOpen={false}
                               cssClass='app-modal-main-cont'
@@ -138,40 +170,7 @@ const LandBase:React.FC<{isAuth:boolean,setAuth:any}> = (props)=>{
                               >
                               <Profile />
                          </IonModal>
-          </IonContent>
-
-                                   <IonMenu  
-                                        side="start" 
-                                        swipeGesture={true}  
-                                        menuId="menuId"
-                                        className='appLeftMenuCont'
-                                        contentId="appContentId"
-                                        type='push'
-                                        
-                                        maxEdgeStart={40}>
-                                        <IonContent className='appContentMainCont'>
-                                             <div className='appSideChannelListCont'>
-                                                       <div>
-                                                          
-                                                           
-                                                            <div className='appSideChannelOuterCont '>
-                                                            <div className='appSideChannelCont'>CN1</div>
-                                                            </div>
-                                                            <div className='appSideChannelOuterCont '>
-                                                            <div className='appSideChannelCont menuButtSelec'>CN2</div>
-                                                            </div>
-                                                            <div className='appSideChannelOuterCont '>
-                                                            <div className='appSideChannelCont'>CN3</div>
-                                                            </div>
-                                                            <div className='appSideChannelHrCont'/>
-                                                            <div className='appSideChannelOuterCont '>
-                                                                 <div className='appSideChannelAddCont'> <IonImg src={Add_box} className='app-bottombar-ico'/></div>
-                                                            </div>
-                                                       </div>
-                                             </div>
-                                        </IonContent>
-                              </IonMenu>  
-
+                         </IonContent>                              
           </IonPage>
           </IonReactRouter>
            </IonApp>

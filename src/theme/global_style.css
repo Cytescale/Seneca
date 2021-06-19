@@ -24,10 +24,24 @@ body{
 .app-welcom-head-main-cont{
      font-size: 32px;
      padding: 14px;
+     margin-bottom: 12px;
+     padding-left: 22px;
      position: relative;
      font-weight: 700;
-     font-family: sen;
+     font-family: quicksand;
      color: #fff;
+     display: inline-flex;
+     align-items: center;
+
+}
+.app-welcom-head-main-cont-ico{
+     width: 22px;
+     height: 22px;
+     
+     color: #fff;
+}
+.app-welcom-head-main-cont-ico-cont{
+     margin-right:16px;
 }
 .app-welcom-head-close-butt{
      color: #fff;
@@ -41,6 +55,7 @@ body{
 
 .app-dhead-main-cont{
      padding: 14px;
+     margin-top: 12px;
      color: #fff;
 }
 .app-dhead-pri-str-main-cont{
@@ -93,6 +108,24 @@ body{
      height: 18px;
      color: #fff;
 }
+
+.app-space-sub-main-cont{
+     --background:red;
+     --border-radius:6px;
+     font-family: poppins;
+     font-weight: 700;
+     --padding-top:0px;
+     --padding-bottom:0px;
+     font-size: 13px;
+     width: 150px;
+}
+
+.app-side-channel-add-ico{
+     width: 23px;
+     height: 23px;
+     color: #fff;
+}
+
 .app-bottombar-ico-right{
      width: 26px;
      height: 26px;
@@ -101,7 +134,7 @@ body{
      z-index: 99999999;
 }
 .app-render-content{
-     margin-top: 60px;
+     margin-top: 30px;
      border-top-left-radius: 12px;
      border-top-right-radius: 12px;     
 }

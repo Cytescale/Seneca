@@ -23,8 +23,12 @@ import Menu from './svg/menu.svg';
 import Profile_placeholder from './png/profile_placeholder.png';
 import Right_arrow from './svg/right-arrow.svg';
 import Add_box from './svg/add-box.svg';
+import WelcomeBanner from './svg/welcome-ban.svg';
+import Add from './svg/add.svg';
 const  profPlaceholder = "https://gravatar.com/avatar/dba6bae8c566f9d4041fb9cd9ada7741?d=identicon&f=y";
-export {CancelIco,
+export {
+     Add,
+     CancelIco,
      Right_arrow,
      Add_box,
      Home_UnSelec,
@@ -37,6 +41,7 @@ export {CancelIco,
      Profile_Selec,
      Mic_UnSelec,
      Menu,
+     WelcomeBanner,
      More_verti,
      Call_end,
      Person_add,

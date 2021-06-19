@@ -40,52 +40,11 @@ let UserTmpDb = new userTempDb();
 //AgoraHelper.getJoiningId();
 //AgoraHelper.setJoiningId(user.getUserData()!.joining_id);
 
-
-
-async function getDataByJid(jid:number):Promise<userData|null>{
-     let uData = await UserTmpDb.getUserByJid(jid!)
-     let res = null;
-     if(!uData){
-          let tres:any = await backendHelper!._getUserJoiningId(jid!.toString());
-          if(tres?.errBool===false){
-               res = tres.data;
-          }
-     }
-     else{
-          console.log("global: user found by jid");
-          res = uData;
-     }
-     return res;
-}
-
-function getDataByJoiningId(jid:number) {
-     return new Promise((resolve) => {
-       setTimeout(() => {
-         resolve(getDataByJid(jid))
-       }, 1500)
-     })
-   }
-
 const  RenderAttnds:React.FC<any> = (props)=>{
      let [pd,setPd] = useState<any>(<div className='app-atnd-ico-cont'></div>);
      console.log("space: on request "+props.jid);
      useEffect(() => {
-          getDataByJoiningId(props.jid)
-          .then((data:any) =>{
-          console.log('space: result'+data?.dname);
-          setPd(
-                              <div  className='app-chat-attnd-card'>
-                                    <div className='app-chat-attnd-card-outer-cont'>
-                                         <div  className='app-chat-attnd-card-ico-outer-cont'>
-                                              <div className='app-chat-attnd-card-ico-cont'>
-                                              <IonImg src={profPlaceholder} className='app-chat-attnd-card-ico'/>
-                                              </div>
-                                         </div>
-                                         <div  className='app-chat-attnd-card-name'>{data?.dname}</div>
-                                    </div>
-                               </div>       
-          )
-          });
+
      }, [props.jid])
      return(pd)                   
 }   
@@ -362,7 +321,7 @@ const ChatCont:React.FC<{}> = (props) =>{
                                    this.state.spaceData.agora_channel_token,
                                    true,
                                    );
-                                   AgoraHelper._joinStream().then((r)=>{
+                                   AgoraHelper._joinStream('spme').then((r)=>{
                                         console.log("space: joining res"+r);
                                         this.props.setJoinedName(this.state.spaceData.name);
                                         this.setToast(true,'Space Joined ');

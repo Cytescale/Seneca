@@ -1,7 +1,7 @@
 import AgoraRTC, { IAgoraRTCClient, IAgoraRTCRemoteUser, IMicrophoneAudioTrack, IRemoteAudioTrack, UID } from "agora-rtc-sdk-ng";
 import nexusResponse from "./nexusResponse";
 import BackendHelper from "./backendHelper";
-
+import spaceDataInter from "../components/spaceInter";
 
 let backendHelper:BackendHelper|null = new BackendHelper(null);
 
@@ -12,7 +12,7 @@ export default class agoraHelper{
      
      
      public static UID:string|null  = null;
-     public static JOINING_ID:number|null = null;
+     public static JOINING_ID:string|number|null = null;
      public static JOINED_SID:UID|null = null;
      
      public static RTC_CLIENT:IAgoraRTCClient|null = null;
@@ -25,7 +25,7 @@ export default class agoraHelper{
      public static CHANNEL_NAME:string|null = null;
      public static CAN_TALK:boolean = true;
 
-     public static spaceData:any|null = null;
+     public static spaceData:spaceDataInter|null = null;
 
 
      constructor(uid?:string|null){
@@ -35,9 +35,9 @@ export default class agoraHelper{
           }
           
      }
-     public setSpaceData(v : any) {
+     public setSpaceData(v : spaceDataInter|null) {
           agoraHelper.spaceData = v!;
-          //console.log("agoraHelper: space data set"+JSON.stringify(v));
+          console.log("agoraHelper: space data set"+JSON.stringify(v));
      }
      public setUid(uid:string){
           agoraHelper.UID = uid!;
@@ -61,7 +61,20 @@ export default class agoraHelper{
           })
      }
 
-     public setJoiningId(id:number){
+
+     public isConnected(){
+          if(agoraHelper.RTC_CLIENT){
+          if(agoraHelper.RTC_CLIENT!.connectionState == 'CONNECTED'){
+               return true;
+          }else{
+               return false;
+          }}
+          else{
+               return false;
+          }
+     }
+
+     public setJoiningId(id:number|string){
           agoraHelper.JOINING_ID = id;
      }
      public setjoinDetails(CHANNEL_NAME:string,CHANNEL_TOKEN:string,CAN_TALK?:boolean){
@@ -157,8 +170,9 @@ export default class agoraHelper{
                       agoraHelper.APP_ID, 
                       cn,
                       ct,
-                      agoraHelper.JOINING_ID,
+                      parseInt(agoraHelper.JOINING_ID.toString()),
                       );
+                      console.log(agoraHelper.JOINING_ID);
                       agoraHelper.JOINED_SID = JOINED_CLIENT_SID!;
                       if(JOINED_CLIENT_SID){
                         this._iniialLocalTrackInit().then(()=>{
@@ -204,6 +218,7 @@ export default class agoraHelper{
      public async _setMicState(){
           if(agoraHelper.LOCAL_AUDIO_TRACK){
                try{
+                  console.log(agoraHelper.MIC);  
                if(agoraHelper.MIC && agoraHelper.CAN_TALK){
                     agoraHelper.LOCAL_AUDIO_TRACK!.setEnabled(true).then(async ()=>{
                    await agoraHelper.RTC_CLIENT!.publish([agoraHelper.LOCAL_AUDIO_TRACK!]);

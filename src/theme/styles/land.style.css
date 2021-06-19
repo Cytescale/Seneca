@@ -18,6 +18,14 @@
      font-size: 15px;
 }
 
+.app-feed-skel-main-cont{
+     width: 90%;
+     height: 100px;
+     --border-radius:8px;
+     margin-left: 5%;
+     
+}
+
 #menuId{
      
 }
@@ -165,13 +173,15 @@ align-items: center;
 .appSideChannelAddCont{
      width: 42px;
      height: 42px;
+     padding: 0px;
      display: flex;
+     padding:0px;
      justify-content: center;
      align-items: center;
      font-size: 24px;
      font-weight: 700;
-     background: #353535;
-     color: #82FF70;
+     background: #252525;
+     color: var(--primary-color-light);
      border-radius: 100px;
      margin-bottom: 10px;
 }
@@ -203,7 +213,16 @@ align-items: center;
      padding-right: 22px;
      margin-top: 12px;
 }    
-
+.app-head-top-fader-cont{
+     height: 52px;
+     width: 100%;
+     background: linear-gradient(177.98deg, #111111 0%, transparent 100%);
+     z-index: 100;
+     position: fixed;
+     top: 0;
+     left: 0;
+     right: 0;
+}
 .app-content-fader-main-cont{
      height: 72px;
      width: 100%;
@@ -272,10 +291,12 @@ align-items: center;
 .app-feat-space-main-cont{
      width: auto;  
      height: 150px;
+     margin-bottom: 10px;
      border-radius: 8px;
      overflow: hidden;
      position: relative;
      background: linear-gradient(224.97deg, rgba(32, 32, 32, 0.45) 0%, rgba(24, 24, 24, 0.45) 90.72%);
+     
      
 }
 
@@ -283,17 +304,43 @@ align-items: center;
      width: 90%;
      margin-left: 5%;
      border-radius: 6px;
-     height: 10px;
-     background-color: var(--primary-color-light);
-     border: 1px solid var(--primary-color-dark);
+     height: 150px;
+     overflow: hidden;
+     background-color: #8FA2FF;
+     position: relative;
+}
+
+.app-intro-main-cont-ico-cont{
+     position: absolute;
+     left: 0;
+     right: 0;
+     top: 0;
+     bottom: 0; 
+     z-index: 0;
+}
+.app-intro-main-cont-ico{
+     width: 100%;
+     height: 100%;
+     object-fit: cover;
+    
+}
+.app-intro-main-cont-tit{
+     z-index: 90;
+     position: absolute;
+     color: #fff;
+     font-size: 28px;
+     font-weight: 700;
+     font-family: poppins;
+     width: 100%;
+     height: 100%;
+     display: flex;
+     justify-content: center;
+     align-items: center;
 }
 
 .app-render-region-cont{
      width: 100%;
      padding: 12px;
-     display: grid;
-     grid-template-columns: repeat(1, 1fr);
-     gap: 12px;
 }
 
 .app-feat-space-main-cont-ripp{
@@ -313,9 +360,11 @@ align-items: center;
 }
 .app-feat-space-top-name-main-cont-name{
      margin-left: 7px;
-     font-family: sen;
-     font-size: 15px;
-     font-weight: 700;
+     display: inline-flex;
+     font-family: poppins;
+     font-size: 14px;
+     width: 50%;
+     font-weight: 600;
      color: #fff;
      
 }
@@ -334,6 +383,7 @@ align-items: center;
      
 }
 .app-feat-space-top-name-main-inner-cont{
+     width: 100%;
      height: 42px;
      display: inline-flex;
      align-items: center;
@@ -341,6 +391,7 @@ align-items: center;
 .app-feat-space-atnd-main-cont{
      height: 42px;
      width: 100%;
+     padding-left: 12px;
      display:inline-flex;
 }
 .app-atnd-ico-cont{
@@ -354,9 +405,51 @@ align-items: center;
      background-color:var(--env-color-s3);
      border-radius: 100px;
      border: 1px solid #fff;
+     overflow: hidden;
+
 }
 
+.attnd-pic-cont{
+     margin-right:-7px;     
+}
 
+.app-bott-add-butt{
+     --background: transparent;
+     --border-radius: 4px;
+     color: #82FF70;
+     font-family: poppins;
+     text-transform: none;
+     font-size: 15px;
+     float: right;    
+}
+.app-bott-add-butt-ico{
+     width: 17px;
+     height: 17px;
+     color: #fff;
+
+}
+.app-render-skelt-main-cont{
+     --width:100%;
+     --border-radius:8px;
+     height: 100px;
+}
+.app-render-space-pic-skelt{
+     --width:18px;
+     --height:18px;
+     --border-radius:100px;
+     margin-right: 10px;
+     
+}
+.app-render-space-name-skelt{
+     --width:30%;
+     --height:22px;
+     --border-radius:5px;
+}
+
+.app-create-space-main-cont{
+     width: 100%;
+     padding: 11px;
+}
 
 .app-feat-space-bottom-main-cont{
      height: auto;
@@ -396,6 +489,7 @@ align-items: center;
 .app-feat-space-left-pro-ico{
      width: 18px;
      height: 18px;
+     margin-right: 5px;
      object-fit: fill;
      font-family: sen;
      font-weight: 700;
@@ -405,6 +499,8 @@ align-items: center;
 .atnd-pro-pic{
      width: 26px;
      height: 26px;
+     --border-radius: 100px;
+     overflow: hidden;
 }
 
 .app-feat-space-head-pro-ico{
@@ -903,7 +999,21 @@ color: #f1f1f1;
      margin-right: 6px;
      border-radius: 100px;
 }
+
+@keyframes app-spac-inp-key{
+     from {
+          transform: translateY(100%);
+     }
+  to {
+     transform: translateY(0%);
+     }
+}
+
 .app-chat-inp-main-cont{
+     animation-name: app-spac-inp-key;
+     animation-duration:0.5s;
+     animation-fill-mode: forwards;
+     animation-timing-function: ease-in-out;
      padding-left: 12px;
      padding-right: 12px;
 }
@@ -1075,4 +1185,20 @@ height: 100px;
 display: flex;
 justify-content: center;
 align-items: center;
+}
+
+.profile-view-cont{
+     border-top-left-radius: 12px;
+     border-top-right-radius: 12px;
+     --background:#151515;
+}
+.app-profile-list-modal-puller{
+     width: 70px;
+     margin-top: 32px;
+     height: 10px;
+     background-color:red;
+     border-radius: 100px;
+}
+.app-profile-list-modal-main-cont{
+     padding-top: 72px;    
 }

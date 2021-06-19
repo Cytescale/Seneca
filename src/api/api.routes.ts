@@ -3,7 +3,7 @@ if(process.env.NODE_ENV=='development'){
      _BASE_API_URL = 'http://localhost:8200/api/'
 }
 if(process.env.NODE_ENV=='production'){
-     _BASE_API_URL = 'https://ec2-65-2-40-247.ap-south-1.compute.amazonaws.com:8200/api/'
+     _BASE_API_URL = 'http://ec2-65-2-40-247.ap-south-1.compute.amazonaws.com:8200/api/'
 }
 
 export declare type URLinter = {
@@ -16,8 +16,12 @@ export declare type URLinter = {
      updateUserInfo:string
      createSpace:string
      imagekitAuth:string
+     getSpaceFeedData:string
+     getSpaceDatabySid:string
 }
 const URLS:URLinter = {
+     getSpaceDatabySid:_BASE_API_URL+'getSpaceDatabySid',
+     getSpaceFeedData:_BASE_API_URL+'getSpaceFeedData',
      getUserInfo:_BASE_API_URL+'getUserDatabyUid',
      getUserByJoiningId:_BASE_API_URL+'getUserDatabyJid',
      imagekitAuth:_BASE_API_URL+"imageKitAuth",

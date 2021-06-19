@@ -1,0 +1,16 @@
+export default interface spaceInter {
+     _id:string,
+     name:string,
+     public_visi:boolean,
+     creator_uid:string,
+     des:string,
+     deleted_bool:boolean,
+     ban_bool:boolean,
+     creation_timestamp:number,
+     agora_channel_name:string,
+     agora_channel_token:string,
+     agora_channel_exp_time:number,
+     update_timestamp:number,
+     broadcaster:Array<number>,
+     listners:string,
+}

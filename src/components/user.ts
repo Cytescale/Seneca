@@ -24,23 +24,23 @@ export default class User {
 
      }
 
-     setUserToken(val:string|null):void{
+     public setUserToken(val:string|null):void{
           User.TOKEN = val;
      }
-     setUserUid(val:string|null):void{
+     public  setUserUid(val:string|null):void{
           User.UID = val;
      }
-     setUserData(val:userData|null):void{
+     public  setUserData(val:userData|null):void{
           User.DATA = val;
           
      }
-     getUserData():userData|null{
+     public  getUserData():userData|null{
           return User.DATA;
      }
-     getUserToken():string|null{
+     public getUserToken():string|null{
           return User.TOKEN;
      }
-     getUserUid():string|null{
+     public  getUserUid():string|null{
           return User.UID
      }
 }

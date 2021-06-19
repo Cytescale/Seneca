@@ -34,7 +34,7 @@ import User, { userData } from '../../../components/user';
 import ban1 from '../../../assets/placeholders/ban1.jpg'
 import BackendHelper from '../../../api/backendHelper';
 import { getUid } from '../../../api/firebaseHelper';
-import { FeaturedSpace, spaceInter } from '../explore/Explore';
+
 let backendHelper:BackendHelper|null = null;
 const user = new User();
 
@@ -214,28 +214,7 @@ export default class SpaceCreate<spaceCreateInter> extends React.Component<space
                     <div className='app-space-create-inp-cont'>
                     <IonTextarea placeholder='Description' value={this.state.des}  onIonChange={e =>{this.setDesc(e.detail.value!)}} className='app-space-create-inp-txt-fld'></IonTextarea>
                     </div>
-                    <DoubleHeader priString="Cover image" secString="Set a cover art for your space" secStringVisi={true}/>
-                    <div className='app-space-create-inp-cont'>
-                    <IonImg src={ban1} className='ion-activatable ripple-parent app-space-create-ban-art'/>
-                    </div>
-
-
-                    {/* <IonList>
-          <IonRadioGroup value={this.state.public_visi} onIonChange={e => this.setVisiBool(e.detail.value)} className='app-space-crate-rad-grup-main-cont'>
-               <DoubleHeader priString="Visibility" secString="Set your space's visibility" secStringVisi={true}/>
-            <IonItem className='app-space-crate-rad-grup-main-cont'>
-              <IonLabel className='app-space-crate-rad-grup-main-cont-tit'>Private</IonLabel>
-              <IonRadio slot="start" value={false} />
-            </IonItem>
-
-            <IonItem className='app-space-crate-rad-grup-main-cont'>
-              <IonLabel className='app-space-crate-rad-grup-main-cont-tit'>Public</IonLabel>
-              <IonRadio slot="start" value={true} />
-            </IonItem>
-          </IonRadioGroup>
-        </IonList>
-         */}
-        <IonToast
+                     <IonToast
                     isOpen={this.state.toastBool}
                     onDidDismiss={() => this.setToast(false,"null")}
                     message={this.state.toastStr}

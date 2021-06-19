@@ -1,360 +1,291 @@
-import {IonTabs,IonAvatar,IonButtons,IonFooter,IonMenuButton,IonSearchbar,IonIcon,IonModal,IonFab,IonTabBar,IonRippleEffect,IonFabButton,withIonLifeCycle , IonRouterOutlet,IonTabButton, IonContent,IonButton, IonHeader, IonSlides, IonSlide,IonRefresher, IonRefresherContent,IonPage, IonItem,IonLabel,IonImg,IonInput,IonTitle, IonToolbar, useIonRouter } from '@ionic/react';
-import { add,mic } from 'ionicons/icons';
+import {IonRippleEffect,IonMenu,withIonLifeCycle ,IonSkeletonText,  IonToast,  IonContent,IonRefresher, IonRefresherContent,IonPage,IonImg,useIonRouter } from '@ionic/react';
 import { RefresherEventDetail } from '@ionic/core';
-import { chevronDownCircleOutline } from 'ionicons/icons';
 import { Link, Redirect, Route } from 'react-router-dom';
-import { StatusBar } from '@ionic-native/status-bar/ngx';
-import '../../../theme/styles/land.style.css';
 import React,{CSSProperties, useState,useEffect} from 'react';
-import {CancelIco,profPlaceholder,headphones, Search_Selec, Search_UnSelec} from '../../../assets';
-import ban1 from '../../../assets/placeholders/ban1.jpg'
-import ban2 from '../../../assets/placeholders/ban2.jpg'
-import pep1 from '../../../assets/placeholders/pep1.jpg'
-import pep2 from '../../../assets/placeholders/pep2.jpg'
-import pep3 from '../../../assets/placeholders/pep3.jpg'
-import pep4 from '../../../assets/placeholders/pep4.jpg'
+import {Menu,profPlaceholder,headphones,WelcomeBanner, Add} from '../../../assets';
+import '../../../theme/styles/land.style.css';
 import nexusResponse from '../../../api/nexusResponse';
-
-import { personCircle, search, helpCircle, star, create, ellipsisHorizontal, ellipsisVertical } from 'ionicons/icons';
-
-import Profile from '../profileView';
-
-import { Mic_UnSelec,Menu,Profile_UnSelec} from '../../../assets';
-
 import {ExploreProps} from '../../../types/land/land.type';
-
-
 import BackendHelper from '../../../api/backendHelper';
 import firebaseHelper, { getUid } from '../../../api/firebaseHelper';
 import User, { userData } from '../../../components/user';
 import history from '../../history';
 import agoraHelper from '../../../api/agoraHelper';
 import userTmpDb from '../../../components/userTempDb';
+import spaceDataInter from '../../../components/spaceInter';
+import {DoubleHeader,WecomeHead} from '../../../components/uiComp';
+import landInter from '../../../components/landInter';
 
 var UserTmpDb = new userTmpDb(); 
 var backendHelper:BackendHelper|null = null;
 var feedBackEndHelper:BackendHelper|null = new BackendHelper("string");
 var FirebaseHelper:firebaseHelper|null = new firebaseHelper();
 const user = new User();
-let AgoraHelper:agoraHelper =  new agoraHelper(user.getUserUid());
-AgoraHelper.getJoiningId();
+var AgoraHelper:agoraHelper =  new agoraHelper(user.getUserUid());
+// AgoraHelper.getJoiningId();
 
-
-export declare interface spaceInter{
-     name:string
-     creator_name:string
-     banner_art_src:any|null
-     isLive:boolean
-     suid:string|null
-   
-}    
-
-class space implements spaceInter{
-     name = "Placeholder name";
-     creator_name = "Placeholder name";
-     banner_art_src = null;
-     isLive = false;
-     suid;
-     constructor(name:string,creator_name:string,isLive:boolean,uid:string|null,banner_art_src?:any,){
-          this.name = name;
-          this.creator_name = creator_name;
-          this.banner_art_src = banner_art_src;
-          this.isLive = isLive;
-          this.suid = uid;
-     }
-}
-
-
-
-async function getDataByJid(jid:number):Promise<userData|null>{
-     let uData = await UserTmpDb.getUserByJid(jid!)
-     let res = null;
-     if(!uData){
-          let tres:any = await backendHelper!._getUserJoiningId(jid!.toString());
-          if(tres?.errBool===false){
-               res = tres.data;
-          }
-     }
-     else{
-          console.log("global: user found by jid");
-          res = uData;
-     }
-     return res;
-}
-
-
-
-function getDataByJoiningId(jid:number) {
-     return new Promise((resolve) => {
-       setTimeout(() => {
-         resolve(getDataByJid(jid))
-       }, 2000)
-     })
-   }
-
-   
-
-async function getData(uid:string):Promise<userData|null>{
-     let uData = await UserTmpDb.getUserByUid(uid!)
-     let res = null;
-     if(!uData){
-          let tres:nexusResponse = await feedBackEndHelper!._getUserInfo(uid!);
-          if(tres?.errBool===false){
-               res = tres.responseData;
-          }
-     }
-     else{
-          console.log("global: user foun by id");
-          res = uData;
-     }
-     return res;
-}
-
-function getDataByUid(uid:string) {
-     return new Promise((resolve) => {
-       setTimeout(() => {
-         resolve(getData(uid))
-       }, 2000)
-     })
-   }
 
 const  RenderAttnds:React.FC<any> = (props)=>{
-     let [pd,setPd] = useState<any>(<div className='app-atnd-ico-cont'></div>);
+     let [pd,setPd] = useState<any>(<IonSkeletonText animated className='app-render-space-pic-skelt attnd-pic-cont' style={{
+          width: '26px',
+          height:'26px',
+          }} />);
      useEffect(() => {
-          getDataByJoiningId(props.jid)
-          .then((data:any) =>{
-          setPd(
-               <div className='app-atnd-ico-cont'>
-                               <IonImg src={profPlaceholder} className='app-feat-space-left-pro-ico atnd-pro-pic' />
-               </div>
-          )
-          });
+               backendHelper?._getUserJoiningId(props.jid!).then((res:nexusResponse)=>{
+                    if(!res.errBool){
+                    setPd(<div className='app-atnd-ico-cont'>
+                         <IonImg src={profPlaceholder} className='atnd-pro-pic' />
+                         </div>);     
+               }
+               else{console.log(res.errMess);}
+         }).catch(e=>{
+               console.log(e);
+         })
      }, [props.jid])
      return(pd)         
 }    
-
-
 const  RenderName:React.FC<any> = (props)=>{
-     let [pd,setPd] = useState<any>(  <div className='app-feat-space-top-name-main-cont-name'></div>);
+     //let [dataLoaded,setDataLoaded] = useState<Boolean>(false);
+     let [pd,setPd] = useState<any>(<div className='app-feat-space-top-name-main-cont-name'>
+                                        <IonSkeletonText animated className='app-render-space-pic-skelt' style={{
+                                        width: '18px',
+                                        height:'18px',
+                                        }} />
+                                        <IonSkeletonText animated  className='app-render-space-name-skelt' />
+                                   </div>);
      useEffect(() => {
-          getDataByUid(props.data.suid!)
-          .then((data:any) =>{
-               
-               setPd(
-               <div className='app-feat-space-top-name-main-cont-name'>
-                     {data?data.dname:'null'}
-               </div>
-          )
-          });
-     }, [props.data.suid!]);
+         backendHelper?._getUserInfo(props.uid!).then((res:nexusResponse)=>{
+               if(!res.errBool){
+                    setPd(
+                         <div className='app-feat-space-top-name-main-cont-name'>
+                         <IonImg src={profPlaceholder} className='app-feat-space-left-pro-ico' />
+                        {res.responseData.dname}
+                    </div> 
+                    );     
+               }
+               else{console.log(res.errMess);}
+         }).catch(e=>{
+               console.log(e);
+         })
+     }, [props.uid!]);
      return(pd)                      
 }    
 
+export interface SpaceComp extends landInter{
+     data:spaceDataInter
+}
 
 
-export let FeaturedSpace:React.FC<{
-     data?:spaceFeedInter,
-     setProfileModal?:any,
-     setSpaceModal?:any
-     setSid?:any,
-     sid?:any
-     }> =(props)=>{
+export let SpaceComp:React.FC<SpaceComp> =(props:SpaceComp)=>{
      let router = useIonRouter();
-   
      return(
-
           <div className='app-feat-space-main-cont' onClick={()=>{
-                    props.setSpaceModal(true);
-          }}>
-                
+               props.setSpaceModal(true);
+               if(props.sid!=props.data._id){
+                    props.setSpaceData(props.data);
+                    props.setSid(props.data._id);}
+               }}>
+              
                <div className='app-feat-space-top-name-main-cont'>
                               <div className='app-feat-space-top-name-main-inner-cont'>
-                                   <IonImg src={profPlaceholder} className='ion-activatable ripple-parent app-feat-space-left-pro-ico' 
-                                   onClick={()=>{
-                                        if(user.getUserUid() === props.data?.suid){
-                                             router.push('/land/profile','forward','push');
-                                        }
-                                        else{
-                                             props.setProfileModal(true,props.data?.suid);
-                                        }                                   
-                                   }}></IonImg>
-                                    <div className='app-feat-space-top-name-main-cont-name'>
-                                        Nikhil
-                                   </div>
-                                   <div className='app-feat-space-bottom-pro-count-cont'> <IonImg src={headphones} className='app-feat-space-head-pro-ico' /> 0</div>
+                                   <RenderName uid={props.data.creator_uid}/>
+                                   <div className='app-feat-space-bottom-pro-count-cont'> <IonImg src={headphones} className='app-feat-space-head-pro-ico' />{props.data.listners}</div>
                               </div>
-
                               <div className='app-feat-space-atnd-main-cont'>
-                                 {/* {
-                                      props.data.broadcaster?.map((e:any)=>{
+                                 {
+                                      props.data.broadcaster?.map((e:any,ind:number)=>{
+                                             console.log(e);
                                              return(
-                                             <RenderAttnds jid={e} />
+                                             <RenderAttnds key={ind} jid={e} />
                                              )
                                       })
-                                 } */}
-                                 
+                                 }
                               </div>
 
                </div>
-                                 
-                {/* <IonImg src={profPlaceholder} className='ion-activatable ripple-parent app-feat-space-ban-art'/> */}
                <div className='app-feat-space-bottom-main-cont'>
-                   
                     <div className='app-feat-space-bottom-name-main-cont'>
                          <div>
-                              <div className='app-feat-space-bottom-name'>
-                                   Placeholder Name     
-                              </div>
-                              <div className='app-feat-space-bottom-des'>
-                                   Sample Description
-                              </div>
+                              <div className='app-feat-space-bottom-name'>{props.data.name}</div>
+                              <div className='app-feat-space-bottom-des'>{props.data.des}</div>
                          </div>
                     </div>                    
-               </div>
-                    <IonRippleEffect className='app-feat-space-main-cont-ripp'> </IonRippleEffect>
+                    </div>
           </div>
      )
 }
 
 
-let WecomeHead:React.FC<{shown?:Boolean}> = (props)=>{
-     const [visi, setVis] = useState(props.shown);
+const Feed:React.FC<any> = (props)=>{
+     let [feedData,setFeedData] = useState<Array<spaceDataInter>|null>(null);
+     useEffect(() => {
+          backendHelper?._getSpaceFeedDatabyUid(props.uid!).then((res:nexusResponse)=>{
+               if(!res.errBool){
+                    setFeedData(res.responseData);
+                    props.setSuccToast(true,'Feed Data Loaded');
+               }else{
+                    props.setErrToast(true,res.errMess);
+               }
+          }).catch((e)=>{
+               console.log(e);
+               props.setErrToast(true,e);
+          })
+     }, [props.uid!]);
      return(
-     <div className='app-welcom-head-main-cont'  style={{
-               display:visi==true?'block':'none',
-          }}>
-               {/* <Link to="/land/space" replace >User 1</Link> */}
-          Welcome to <br/> Seneca
-          
-          <IonImg className='app-welcom-head-close-butt' onClick={()=>{
-               setVis(!visi);
-          }}
-          src={CancelIco}
-          />
-     </div>
-     )
+          <div>
+               {feedData?.map((e:spaceDataInter,ind)=>{
+                    return(<SpaceComp key={ind} {...props} data={e}/>)
+               })}
+          </div>    
+     );
 }
 
 
-
-let DoubleHeader:React.FC<{priString:string,secString?:string,secStringVisi?:boolean,SenStyle?:CSSProperties}> =(props)=>{
+const SideChannelList:React.FC = (props:any)=>{
      return(
-          <div style={props.SenStyle!} className='app-dhead-main-cont'>
-                    <div className='app-dhead-sec-str-main-cont' style={{
-                         display:props.secString && props.secStringVisi === true?'block':'none',
-                    }}>
-                    {props.secString}     
+          <IonMenu  
+               side="start" 
+               swipeGesture={true}  
+               menuId="menuId"
+               className='appLeftMenuCont'
+               contentId="explore-content"
+               type='push'
+               
+               maxEdgeStart={40}>
+               <IonContent className='appContentMainCont'>
+                    <div className='appSideChannelListCont'>
+                              <div>
+                                 
+                                  
+                                   <div className='appSideChannelOuterCont '>
+                                   <div className='appSideChannelCont'>CN1</div>
+                                   </div>
+                                   <div className='appSideChannelHrCont'/>
+                                   <div className='appSideChannelOuterCont '>
+                                        <button className='appSideChannelAddCont' onClick={()=>{
+                                             history.push('/spacecreate');
+                                        }}><IonImg src={Add} className=' '/></button>
+                                   </div>
+                              </div>
                     </div>
-                    <div className='app-dhead-pri-str-main-cont'>
-                    {props.priString}     
-                    </div>
-                    
-          </div>
-     )     
+               </IonContent>
+     </IonMenu>  );
 }
-
-
-
-
-
-export declare interface spaceFeedInter{
-     name?:string
-     des?:string
-     creator_name?:string
-     profile_pic_src?:string|null
-     banner_art_src?:string|null
-     isLive?:boolean
-     cuid?:string|null 
-     suid?:string|null
-     listners?:number
-     broadcaster?:Array<any>|null
-}    
 
 
 class Explore extends React.Component<any,{
      userDataLoaded:boolean
-     profileModalShow:boolean
-     profileModalUid:string
+     errToastBool:boolean,
+     errToastMess:string|null,
+     succToastBool:boolean,
+     succToastMess:string|null,
 }>{
      constructor(props:ExploreProps){
           super(props);
           this.state={
-               userDataLoaded:false,
-               profileModalShow:false,
-               profileModalUid:'null'
+               succToastBool:false,
+               succToastMess:null,
+               errToastBool:false,
+               errToastMess:null,
+               userDataLoaded:false,               
           }
+          this.setUserDataLoaded = this.setUserDataLoaded.bind(this);
           this.exploreClassInit = this.exploreClassInit.bind(this);
-          this.setProfileModal = this.setProfileModal.bind(this);
+          this.setErrToast = this.setErrToast.bind(this);
+          this.setSuccToast = this.setSuccToast.bind(this);
           this.doRefresh  = this.doRefresh.bind(this);
      }
-
-     setProfileModal(val:boolean,uid?:string){
-          this.setState({profileModalShow:val ,profileModalUid:uid!})
+     setSuccToast(b:boolean,m:string|null){
+          this.setState({succToastBool:b,succToastMess:m});
      }
-
+     setErrToast(b:boolean,m:string|null){
+          this.setState({errToastBool:b,errToastMess:m});
+     }
+     setUserDataLoaded(b:boolean){
+          this.setState({userDataLoaded:b});
+     }
      doRefresh(event: CustomEvent<RefresherEventDetail>) {
           console.log('Begin async operation');
           this.exploreClassInit(true);
+          this.setUserDataLoaded(false);
           setTimeout(() => {
-            console.log('Async operation has ended');
+            this.exploreClassInit(true);
             event.detail.complete();
           }, 2000);
      }
 
-     async exploreInit(){
-          let res = await getUid();
-          console.log("GOT UID = "+res);
-
-     } 
      exploreClassInit(reloadBool?:boolean){
           if(reloadBool!){
-               console.log("Explore: reload uid"+user.getUserUid());          
+               console.log("Exploree: reload uid"+user.getUserUid());          
           }
           if(user.getUserUid())backendHelper = new BackendHelper(user.getUserUid()!);
           if(backendHelper){
                backendHelper._getUserInfo(user.getUserUid()).then((res:nexusResponse)=>{
                     if(res){
-                         if(res.errBool!==true){
-                              user.setUserData(res.responseData);
-                                   AgoraHelper.setJoiningId(user.getUserData()!.joining_id);
-                                   if(user.getUserData()?.init_bool===false){
-                                   history.replace('/editprofile');
-                              }
+                         if(!res.errBool){
+                               this.setUserDataLoaded(true);
+                               this.setSuccToast(true,'User Data loaded');
+                               user.setUserData(res.responseData);
+                               AgoraHelper.setJoiningId(res.responseData.joining_id);
+                              // user.setUserData(res.responseData);
+                              //      //AgoraHelper.setJoiningId(user.getUserData()!.joining_id);
+                              //      if(user.getUserData()?.init_bool===false){
+                              //      history.replace('/editprofile');
+                              // }
                          }
+                         else{this.setErrToast(true,res.errMess);}
                }
+               }).catch(e=>{
+                    this.setErrToast(true,e);
                });
           }
      }
      
-
-
      componentDidMount() {
           console.log("Explore: explore init uid"+user.getUserUid());
-         // this.exploreClassInit(false);
-        }
+          this.exploreClassInit(false);
+     }
 
      render(){
           return(
                    <IonPage >
-                    <IonContent fullscreen className='app-content-main-cont '>
-                         <IonRefresher slot="fixed" onIonRefresh={this.doRefresh}>
-                              <IonRefresherContent></IonRefresherContent>
-                              </IonRefresher>
+                    <IonContent fullscreen className='app-content-main-cont ' id='explore-content' >
+                         <IonRefresher slot="fixed" onIonRefresh={this.doRefresh}><IonRefresherContent></IonRefresherContent></IonRefresher>
                               <div className='app-render-content'>
                                    <div className='app-start-spacer'/>
                                    <WecomeHead shown/>
-                                   {/* <div className='app-intro-main-cont'>
-                                   </div> */}
+                                   <div className='app-intro-main-cont'>
+                                        <div className='app-intro-main-cont-ico-cont'>
+                                        <IonImg src={WelcomeBanner} className='app-intro-main-cont-ico'/>
+                                        </div>
+                                        <div className='app-intro-main-cont-tit'>Start Talking </div>
+                                   </div>
                                    <DoubleHeader priString="Recommendation" secString="Spaces you may be interested in" secStringVisi={true}/>
                                    <div className='app-render-region-cont'>
-                                   <FeaturedSpace setSpaceModal={this.props.setSpaceModal}/>
-                                   <FeaturedSpace setSpaceModal={this.props.setSpaceModal}/>
-                                   <FeaturedSpace setSpaceModal={this.props.setSpaceModal}/>
-                                   <FeaturedSpace setSpaceModal={this.props.setSpaceModal}/>
+                                        {this.state.userDataLoaded?
+                                             <Feed {...this.props} 
+                                             uid={user.getUserUid()} 
+                                             setErrToast={this.setErrToast} 
+                                             setSuccToast={this.setSuccToast}
+                                             />:<IonSkeletonText animated className='app-render-skelt-main-cont' />}
                                    </div>
-                                   
-                              </div>                             
+                                      <IonToast
+                                        isOpen={this.state.errToastBool}
+                                        color='danger'
+                                        onDidDismiss={() => this.setErrToast(false,null)}
+                                        message={this.state.errToastMess!}
+                                        duration={1000}
+                                        />
+                                         <IonToast
+                                        isOpen={this.state.succToastBool}
+                                        color='success'
+                                        onDidDismiss={() => this.setSuccToast(false,null)}
+                                        message={this.state.succToastMess!}
+                                        duration={1000}
+                                        />
+                              </div>                       
                               </IonContent>        
+                              <SideChannelList {...this.props}/>
                     </IonPage>
          );
      }
