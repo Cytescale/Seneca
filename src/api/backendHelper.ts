@@ -4,7 +4,6 @@ import imageKitCert from '../certs/imagekit.config';
 import {userData} from '../components/user';
 import userTempDb from '../components/userTempDb';
 import nexusResponse from './nexusResponse';
-import qs from 'qs';
 
 const Usertmpdb = new userTempDb();
 
