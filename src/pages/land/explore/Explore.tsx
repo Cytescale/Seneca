@@ -24,6 +24,10 @@ const user = new User();
 var AgoraHelper:agoraHelper =  new agoraHelper(user.getUserUid());
 // AgoraHelper.getJoiningId();
 
+//Just a change
+const ADASD=()=>{
+
+}
 
 const  RenderAttnds:React.FC<any> = (props)=>{
      let [pd,setPd] = useState<any>(<IonSkeletonText animated className='app-render-space-pic-skelt attnd-pic-cont' style={{
